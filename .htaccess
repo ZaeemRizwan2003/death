@@ -4,8 +4,8 @@ Options +SymLinksIfOwnerMatch
 RewriteEngine on
 #rewritebase /
 
-RewriteCond %{SERVER_PORT} !=443
-RewriteRule ^ https://www.sungate24.com%{REQUEST_URI} [NS,R,L]
+# RewriteCond %{SERVER_PORT} !=443
+# RewriteRule ^ https://www.sungate24.com%{REQUEST_URI} [NS,R,L]
 
 
 RewriteRule ^faq$ sss.php [L]
