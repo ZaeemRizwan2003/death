@@ -9,12 +9,12 @@ $do = $_GET['do'];
 $q = $_GET['q'];
 $userID = $_SESSION['the_admin']['id'];
 
-include_once dirname(__FILE__).DIRECTORY_SEPARATOR.'mail'.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php';
+include_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'mail' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-function sendMail($email,$adsoyad, $message, $subject)
+function sendMail($email, $adsoyad, $message, $subject)
 {
     date_default_timezone_set('Europe/Istanbul');
     //Server settings
@@ -38,10 +38,10 @@ function sendMail($email,$adsoyad, $message, $subject)
     $mail->setLanguage('tr');
     $mail->setFrom($mail->Username, 'Sungate24');
     $mail->IsHTML(true);
-    $mail->addAddress($email,$adsoyad);
+    $mail->addAddress($email, $adsoyad);
     $mail->Subject = $subject;
     $mail->msgHTML($message);
-    if(!$mail->Send()) {
+    if (!$mail->Send()) {
         $dizi["hata"] = '222';
         exit;
     } else {
@@ -50,7 +50,7 @@ function sendMail($email,$adsoyad, $message, $subject)
     }
 }
 
-if($do == 'email_test'){
+if ($do == 'email_test') {
     try {
         date_default_timezone_set('Europe/Istanbul');
         //Server settings
@@ -1055,7 +1055,7 @@ if($do == 'email_test'){
                                                                                                                                         align="left"
                                                                                                                                         bgcolor="#4E78F1"
                                                                                                                                         valign="top">
-                                                                                                                                        <a href="'.$site_adresi.'aktivasyon/'.$user_email.'/'.$active_code.'"
+                                                                                                                                        <a href="' . $site_adresi . 'aktivasyon/' . $user_email . '/' . $active_code . '"
                                                                                                                                             style="border: 0 solid #4e78f1; border-radius: 6px; color: #FFFFFF; display: inline-block; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: bold; line-height: 1.3; margin: 0; padding: 13px 0; text-align: center; text-decoration: none; width: 100%"
                                                                                                                                             target="_blank">
                                                                                                                                             <p class="text-center"
@@ -1299,7 +1299,7 @@ if($do == 'email_test'){
                                             align="center">
                                             <span class="text-divider" style="margin-left: 10px; margin-right: 10px">
                                                 ©
-                                                '.date('Y').'
+                                                ' . date('Y') . '
                                                 <a href="https://www.sungate24.com/?ref=active_email"
                                                     style="color: #4E78F1; font-family: Helvetica, Arial, sans-serif; font-weight: normal; line-height: 1.3; margin: 0; padding: 0; text-align: left; text-decoration: none"
                                                     target="_blank">
@@ -1332,24 +1332,23 @@ if($do == 'email_test'){
                 
                 </html>
             ');
-        if(!$mail->Send()) {
+        if (!$mail->Send()) {
             echo 'Bir hata meydana geldi, sorun devam ederse müşteri temsilcimiz ile iletişime geçmekten çekinmeyin1.';
             exit;
         } else {
             echo 'Bilgiler kaydedildi, Ödemenizi yapabilirsiniz.';
             $_POST = array();
         }
-    }
-    catch (Exception $e) {
+    } catch (Exception $e) {
         echo 'Bir hata meydana geldi ve formu gönderemedik, lütfen sorun devam ederse bizimle telefon üzerinden iletişime geçiniz.';
         exit;
     }
 }
 
-if ($do == 'hotel'){
-    if($_POST){
+if ($do == 'hotel') {
+    if ($_POST) {
 
-        if($q == 'add'){
+        if ($q == 'add') {
             $name = p('name');
             $slug = sef_link($name);
             $content = p('content');
@@ -1367,25 +1366,25 @@ if ($do == 'hotel'){
             $status = p('status');
             $stars = p('stars');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
 
-                if(!empty($_FILES["picture"]["name"])){
+                if (!empty($_FILES["picture"]["name"])) {
                     $upload = new Upload($_FILES["picture"]);
-                    if ($upload->uploaded){
+                    if ($upload->uploaded) {
                         $rand = uniqid(true);
                         $upload->file_new_name_body = $rand;
-                        if ($upload->image_src_x > 900 || $upload->image_src_x < 900 || $upload->image_src_y > 600 || $upload->image_src_y < 600){
+                        if ($upload->image_src_x > 900 || $upload->image_src_x < 900 || $upload->image_src_y > 600 || $upload->image_src_y < 600) {
                             $upload->image_resize = true;
                             $upload->image_y = 600;
                             $upload->image_x = 900;
                         }
                         $upload->allowed = array('image/*');
                         $upload->Process("../../data/hotel/");
-                        if ($upload->processed){
-                            $picture = $rand.'.'.$upload->image_src_type;
+                        if ($upload->processed) {
+                            $picture = $rand . '.' . $upload->image_src_type;
                         }
                     }
                 }
@@ -1409,15 +1408,15 @@ if ($do == 'hotel'){
                         address = '$address', 
                         created_at = now(), created_user = '$userID', status = '$status'");
 
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich hinzugefügt';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'edit'){
+        if ($q == 'edit') {
             $hotel_id = g('id');
             $view = $db->get_row("SELECT * FROM the_hotel WHERE hotel_id = $hotel_id");
             $name = p('name');
@@ -1437,17 +1436,17 @@ if ($do == 'hotel'){
             $status = p('status');
             $stars = p('stars');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
 
-                if(!empty($_FILES["picture"]["name"])){
+                if (!empty($_FILES["picture"]["name"])) {
                     $upload = new Upload($_FILES["picture"]);
-                    if ($upload->uploaded){
+                    if ($upload->uploaded) {
                         $rand = uniqid(true);
-                        $upload->file_new_name_body = $slug.'_'.$rand;
-                        if ($upload->image_src_x > 900 || $upload->image_src_x < 900 || $upload->image_src_y > 600 || $upload->image_src_y < 600){
+                        $upload->file_new_name_body = $slug . '_' . $rand;
+                        if ($upload->image_src_x > 900 || $upload->image_src_x < 900 || $upload->image_src_y > 600 || $upload->image_src_y < 600) {
                             $upload->image_resize = true;
                             $upload->image_y = 600;
                             $upload->image_x = 900;
@@ -1455,12 +1454,12 @@ if ($do == 'hotel'){
                         $upload->image_convert = jpg;
                         $upload->allowed = array('image/*');
                         $upload->Process("../../data/hotel/");
-                        if ($upload->processed){
-                            $picture = $slug.'_'.$rand.'.jpg';
-                            unlink("../../data/hotel/".$view->picture);
+                        if ($upload->processed) {
+                            $picture = $slug . '_' . $rand . '.jpg';
+                            unlink("../../data/hotel/" . $view->picture);
                         }
                     }
-                }else{
+                } else {
                     $picture = $view->picture;
                 }
 
@@ -1486,52 +1485,51 @@ if ($do == 'hotel'){
                         status = '$status' 
                         WHERE hotel_id = '$hotel_id'");
 
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich aktualisiert.';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'delete'){
+        if ($q == 'delete') {
             $ID = p('deger');
             $bul = $db->get_row("SELECT * FROM the_hotel WHERE hotel_id = '$ID'");
             $delete = $db->query("DELETE FROM the_hotel  WHERE hotel_id = '$ID'");
-            if ($delete){
-                unlink("../../data/hotel/".$bul->picture);
+            if ($delete) {
+                unlink("../../data/hotel/" . $bul->picture);
                 $dizi["ok"] = 'Die Inhalte wurden erfolgreich gelöscht.';
-            }else{
+            } else {
                 $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                 //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
             }
         }
-        if($q == 'pic-add'){
+        if ($q == 'pic-add') {
             $hotel_id = g('id');
             $status = p('status');
             $view = $db->get_row("SELECT * FROM the_hotel WHERE hotel_id = '$hotel_id'");
-            $min_width= 300;
-            $min_height= 300;
-            $max_width= 900;
-            $max_height= 700;
+            $min_width = 300;
+            $min_height = 300;
+            $max_width = 900;
+            $max_height = 700;
 
-            if(!empty($_FILES['pictures']['name'])){
+            if (!empty($_FILES['pictures']['name'])) {
                 $toplam = count($_FILES['pictures']['name']);
-                for ($i=0; $i < $toplam; $i++) {
+                for ($i = 0; $i < $toplam; $i++) {
                     $resimler_y[$i]['name'] = $_FILES['pictures']['name'][$i];
                     $resimler_y[$i]['type'] = $_FILES['pictures']['type'][$i];
                     $resimler_y[$i]['tmp_name'] = $_FILES['pictures']['tmp_name'][$i];
                     $resimler_y[$i]['error'] = $_FILES['pictures']['error'][$i];
                     $resimler_y[$i]['size'] = $_FILES['pictures']['size'][$i];
                 }
-                for($i=0; $i<$toplam; $i++){
+                for ($i = 0; $i < $toplam; $i++) {
                     $upload = new Upload($resimler_y[$i]);
-                    if ($upload->uploaded)
-                    {
+                    if ($upload->uploaded) {
                         $rand = uniqid(true);
                         $upload->image_convert = jpg;
-                        $upload->file_new_name_body =  $view->slug.'_'.'min_'.$rand;
-                        if ($upload->image_src_x > $min_width || $upload->image_src_x < $min_width || $upload->image_src_y > $min_height || $upload->image_src_y < $min_height){
+                        $upload->file_new_name_body = $view->slug . '_' . 'min_' . $rand;
+                        if ($upload->image_src_x > $min_width || $upload->image_src_x < $min_width || $upload->image_src_y > $min_height || $upload->image_src_y < $min_height) {
                             $upload->image_resize = true;
                             $upload->image_ratio_crop = true;
                             $upload->image_x = $min_width;
@@ -1539,11 +1537,11 @@ if ($do == 'hotel'){
                         }
                         $upload->Process('../../data/hotel/pictures/');
                         if ($upload->processed) {
-                            $kucukresim = $view->slug.'_'.'min_'.$rand.'.'.'jpg';
+                            $kucukresim = $view->slug . '_' . 'min_' . $rand . '.' . 'jpg';
                         }
 
-                        $upload->file_new_name_body = $view->slug.'_'.$rand;
-                        if ($upload->image_src_x > $max_width){
+                        $upload->file_new_name_body = $view->slug . '_' . $rand;
+                        if ($upload->image_src_x > $max_width) {
                             $upload->image_resize = true;
                             $upload->image_ratio_y = true;
                             $upload->image_x = $max_width;
@@ -1557,9 +1555,8 @@ if ($do == 'hotel'){
                         $upload->allowed = array('image/*');
                         $upload->image_convert = jpg;
                         $upload->Process('../../data/hotel/pictures/');
-                        if ($upload->processed)
-                        {
-                            $resim = $view->slug.'_'.$rand.'.'.'jpg';
+                        if ($upload->processed) {
+                            $resim = $view->slug . '_' . $rand . '.' . 'jpg';
                             $name = $view->name;
                             $slug = $view->slug;
 
@@ -1573,47 +1570,47 @@ if ($do == 'hotel'){
                                 created_at = now(), 
                                 created_user = '$userID', 
                                 status = '$status'");
-                            if(!$insert){
-                                $dizi["hata"] = '654Bir hata meydana geldi.'.$db->debug();
+                            if (!$insert) {
+                                $dizi["hata"] = '654Bir hata meydana geldi.' . $db->debug();
                             }
                         }
                     }
                 }
-                $dizi["ok"] =  'Bilder hinzugefügt, sie werden weitergeleitet.';
+                $dizi["ok"] = 'Bilder hinzugefügt, sie werden weitergeleitet.';
             }
         }
-        if($q == 'pic-content'){
+        if ($q == 'pic-content') {
             $picID = p('id');
             $aciklama = p('content');
             $update = $db->query("UPDATE the_hotel_picture SET content = '$aciklama' WHERE picture_id = '$picID'");
-            if ($update){
+            if ($update) {
                 $dizi["ok"] = 'Erläuterung aktualisiert.';
-            }else{
+            } else {
                 $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                 //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
             }
         }
-        if($q == 'pic-rank'){
+        if ($q == 'pic-rank') {
             $picID = p('id');
             $sira = p('rank');
             $update = $db->query("UPDATE the_hotel_picture SET rank = '$sira' WHERE picture_id = '$picID'");
-            if ($update){
+            if ($update) {
                 $dizi["ok"] = 'Platzierung aktualisiert.';
-            }else{
+            } else {
                 $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                 //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
             }
         }
-        if($q == 'pic-delete'){
+        if ($q == 'pic-delete') {
             $picID = g('id');
             $bul = $db->get_row("SELECT * FROM the_hotel_picture WHERE picture_id = '$picID'");
-            if($bul){
-                unlink('../../data/hotel/pictures/'.$bul->mini_picture);
-                unlink('../../data/hotel/pictures/'.$bul->big_picture);
+            if ($bul) {
+                unlink('../../data/hotel/pictures/' . $bul->mini_picture);
+                unlink('../../data/hotel/pictures/' . $bul->big_picture);
                 $sil = $db->query("DELETE FROM the_hotel_picture  WHERE picture_id = '$picID'");
-                if ($sil){
+                if ($sil) {
                     $dizi["ok"] = 'Resim temizlendi.';
-                }else{
+                } else {
                     $dizi["hata"] = 'Bir hata meydana geldi.';
                     //$dizi['Ein Fehler ist aufgetretten;
                     ////$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
@@ -1627,23 +1624,23 @@ if ($do == 'hotel'){
 
 
 
-if ($do == 'hotel_comment'){
-    if($_POST){
+if ($do == 'hotel_comment') {
+    if ($_POST) {
 
-        if($q == 'user_add'){
+        if ($q == 'user_add') {
             $userID = '1';
             $name = p('name_review');
             $email = p('email_review');
             $content = p('content');
             $rating_review = p('rating_review');
             $hotel_id = p('hotel_id');
-            $hotel_category_id = p('hotel_category_id'); 
+            $hotel_category_id = p('hotel_category_id');
 
-            if(!$name || !$email || !$content || !$rating_review){
+            if (!$name || !$email || !$content || !$rating_review) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
- 
+            } else {
+
                 $insert = $db->query("INSERT INTO the_hotel_comment SET
                         hotel_id = '$hotel_id',
                         user_id = '$userID',
@@ -1653,59 +1650,59 @@ if ($do == 'hotel_comment'){
                         content = '$content',
                         created_at = now(), created_user = '$userID', status = '0'");
 
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Ihr Kommentar wurde erfolgreich gespeichert und wird veröffentlicht, nachdem Sie ihn genehmigt haben. Vielen Dank für deine Zeit.';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
 
-         if($q == 'comment-status'){
+        if ($q == 'comment-status') {
             $ID = p('id');
             $durum = p('durum');
             $update = $db->query("UPDATE the_hotel_comment SET status = '$durum' WHERE id = '$ID'");
-            if ($update){
+            if ($update) {
                 $dizi["ok"] = 'Durum güncellendi.';
-            }else{
-                $dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
+            } else {
+                $dizi["hata"] = 'Bir hata meydana geldi.' . $db->debug();
             }
         }
 
 
-        if($q == 'comment-change'){
+        if ($q == 'comment-change') {
             $picID = p('id');
             $aciklama = p('content');
             $update = $db->query("UPDATE the_hotel_comment SET content = '$aciklama' WHERE id = '$picID'");
-            if ($update){
+            if ($update) {
                 $dizi["ok"] = 'Erläuterung aktualisiert.';
-            }else{
+            } else {
                 $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                 //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
             }
         }
-         
-        if($q == 'delete'){
+
+        if ($q == 'delete') {
             $ID = p('deger');
             $bul = $db->get_row("SELECT * FROM the_hotel_comment WHERE id = '$ID'");
             $delete = $db->query("DELETE FROM the_hotel_comment  WHERE id = '$ID'");
-            if ($delete){
+            if ($delete) {
                 $dizi["ok"] = 'Die Inhalte wurden erfolgreich gelöscht.';
-            }else{
+            } else {
                 $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                 //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
             }
-        } 
+        }
 
         echo json_encode($dizi);
     }
 }
 
-if ($do == 'tour'){
-    if($_POST){
+if ($do == 'tour') {
+    if ($_POST) {
 
-        if($q == 'add'){
+        if ($q == 'add') {
             $hotel_id = p('hotel_id');
             $name = p('name');
             $slug = sef_link($name);
@@ -1720,25 +1717,25 @@ if ($do == 'tour'){
             $location_longitude = p('location_longitude');
             $status = p('status');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
 
-                if(!empty($_FILES["picture"]["name"])){
+                if (!empty($_FILES["picture"]["name"])) {
                     $upload = new Upload($_FILES["picture"]);
-                    if ($upload->uploaded){
+                    if ($upload->uploaded) {
                         $rand = uniqid(true);
                         $upload->file_new_name_body = $rand;
-                        if ($upload->image_src_x > 880 || $upload->image_src_x < 880 || $upload->image_src_y > 533 || $upload->image_src_y < 533){
+                        if ($upload->image_src_x > 880 || $upload->image_src_x < 880 || $upload->image_src_y > 533 || $upload->image_src_y < 533) {
                             $upload->image_resize = true;
                             $upload->image_y = 533;
                             $upload->image_x = 880;
                         }
                         $upload->allowed = array('image/*');
                         $upload->Process("../../data/tour/");
-                        if ($upload->processed){
-                            $picture = $rand.'.'.$upload->image_src_type;
+                        if ($upload->processed) {
+                            $picture = $rand . '.' . $upload->image_src_type;
                         }
                     }
                 }
@@ -1759,15 +1756,15 @@ if ($do == 'tour'){
                         address = '$address', 
                         created_at = now(), created_user = '$userID', status = '$status'");
 
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich hinzugefügt';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'edit'){
+        if ($q == 'edit') {
             $tour_id = g('id');
             $view = $db->get_row("SELECT * FROM the_tour WHERE tour_id = $tour_id");
             $hotel_id = p('hotel_id');
@@ -1785,17 +1782,17 @@ if ($do == 'tour'){
             $status = p('status');
             $stars = p('stars');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
 
-                if(!empty($_FILES["picture"]["name"])){
+                if (!empty($_FILES["picture"]["name"])) {
                     $upload = new Upload($_FILES["picture"]);
-                    if ($upload->uploaded){
+                    if ($upload->uploaded) {
                         $rand = uniqid(true);
-                        $upload->file_new_name_body = $slug.'_'.$rand;
-                        if ($upload->image_src_x > 880 || $upload->image_src_x < 880 || $upload->image_src_y > 533 || $upload->image_src_y < 533){
+                        $upload->file_new_name_body = $slug . '_' . $rand;
+                        if ($upload->image_src_x > 880 || $upload->image_src_x < 880 || $upload->image_src_y > 533 || $upload->image_src_y < 533) {
                             $upload->image_resize = true;
                             $upload->image_y = 533;
                             $upload->image_x = 880;
@@ -1803,12 +1800,12 @@ if ($do == 'tour'){
                         $upload->image_convert = jpg;
                         $upload->allowed = array('image/*');
                         $upload->Process("../../data/tour/");
-                        if ($upload->processed){
-                            $picture = $slug.'_'.$rand.'.jpg';
-                            unlink("../../data/tour/".$view->picture);
+                        if ($upload->processed) {
+                            $picture = $slug . '_' . $rand . '.jpg';
+                            unlink("../../data/tour/" . $view->picture);
                         }
                     }
-                }else{
+                } else {
                     $picture = $view->picture;
                 }
 
@@ -1831,27 +1828,27 @@ if ($do == 'tour'){
                         status = '$status' 
                         WHERE tour_id = '$tour_id'");
 
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich aktualisiert.';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'delete'){
+        if ($q == 'delete') {
             $ID = p('deger');
             $bul = $db->get_row("SELECT * FROM the_tour WHERE tour_id = '$ID'");
             $delete = $db->query("DELETE FROM the_tour  WHERE tour_id = '$ID'");
-            if ($delete){
-                unlink("../../data/tour/".$bul->picture);
+            if ($delete) {
+                unlink("../../data/tour/" . $bul->picture);
                 $dizi["ok"] = 'Die Inhalte wurden erfolgreich gelöscht.';
-            }else{
+            } else {
                 $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                 //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
             }
         }
-        if($q == 'date-add'){
+        if ($q == 'date-add') {
             $tour_id = p('tour_id');
             $description = p('description');
             $person_price = p('person_price');
@@ -1863,9 +1860,9 @@ if ($do == 'tour'){
             $tour_finish_date = p('tour_finish_date');
             $status = p('status');
 
-            if(!$tour_id){
+            if (!$tour_id) {
                 $dizi['hata'] = 'Lütfen bir tur belirtiniz.';
-            }else{
+            } else {
 
                 $insert = $db->query("INSERT INTO the_tour_date SET
                         tour_id = '$tour_id',
@@ -1879,15 +1876,15 @@ if ($do == 'tour'){
                         price_discount = '$price_discount',
                         created_at = now(), created_user = '$userID', status = '$status'");
 
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich hinzugefügt';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'date-edit'){
+        if ($q == 'date-edit') {
             $date_id = g('id');
             $tour_id = p('tour_id');
             $description = p('description');
@@ -1900,9 +1897,9 @@ if ($do == 'tour'){
             $tour_finish_date = p('tour_finish_date');
             $status = p('status');
 
-            if(!$tour_id){
+            if (!$tour_id) {
                 $dizi['hata'] = 'Lütfen bir tur belirtiniz.';
-            }else{
+            } else {
 
                 $insert = $db->query("UPDATE the_tour_date SET
                         tour_id = '$tour_id',
@@ -1918,40 +1915,39 @@ if ($do == 'tour'){
                         updated_user = '$userID', 
                         status = '$status' WHERE date_id = '$date_id'");
 
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich aktualisiert.';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'pic-add'){
+        if ($q == 'pic-add') {
             $tour_id = g('id');
             $status = p('status');
             $view = $db->get_row("SELECT * FROM the_tour WHERE tour_id = '$tour_id'");
-            $min_width= 300;
-            $min_height= 300;
-            $max_width= 900;
-            $max_height= 700;
+            $min_width = 300;
+            $min_height = 300;
+            $max_width = 900;
+            $max_height = 700;
 
-            if(!empty($_FILES['pictures']['name'])){
+            if (!empty($_FILES['pictures']['name'])) {
                 $toplam = count($_FILES['pictures']['name']);
-                for ($i=0; $i < $toplam; $i++) {
+                for ($i = 0; $i < $toplam; $i++) {
                     $resimler_y[$i]['name'] = $_FILES['pictures']['name'][$i];
                     $resimler_y[$i]['type'] = $_FILES['pictures']['type'][$i];
                     $resimler_y[$i]['tmp_name'] = $_FILES['pictures']['tmp_name'][$i];
                     $resimler_y[$i]['error'] = $_FILES['pictures']['error'][$i];
                     $resimler_y[$i]['size'] = $_FILES['pictures']['size'][$i];
                 }
-                for($i=0; $i<$toplam; $i++){
+                for ($i = 0; $i < $toplam; $i++) {
                     $upload = new Upload($resimler_y[$i]);
-                    if ($upload->uploaded)
-                    {
+                    if ($upload->uploaded) {
                         $rand = uniqid(true);
                         $upload->image_convert = jpg;
-                        $upload->file_new_name_body =  $view->slug.'_'.'min_'.$rand;
-                        if ($upload->image_src_x > $min_width || $upload->image_src_x < $min_width || $upload->image_src_y > $min_height || $upload->image_src_y < $min_height){
+                        $upload->file_new_name_body = $view->slug . '_' . 'min_' . $rand;
+                        if ($upload->image_src_x > $min_width || $upload->image_src_x < $min_width || $upload->image_src_y > $min_height || $upload->image_src_y < $min_height) {
                             $upload->image_resize = true;
                             $upload->image_ratio_crop = true;
                             $upload->image_x = $min_width;
@@ -1959,11 +1955,11 @@ if ($do == 'tour'){
                         }
                         $upload->Process('../../data/tour/pictures/');
                         if ($upload->processed) {
-                            $kucukresim = $view->slug.'_'.'min_'.$rand.'.'.'jpg';
+                            $kucukresim = $view->slug . '_' . 'min_' . $rand . '.' . 'jpg';
                         }
 
-                        $upload->file_new_name_body = $view->slug.'_'.$rand;
-                        if ($upload->image_src_x > $max_width){
+                        $upload->file_new_name_body = $view->slug . '_' . $rand;
+                        if ($upload->image_src_x > $max_width) {
                             $upload->image_resize = true;
                             $upload->image_ratio_y = true;
                             $upload->image_x = $max_width;
@@ -1977,9 +1973,8 @@ if ($do == 'tour'){
                         $upload->allowed = array('image/*');
                         $upload->image_convert = jpg;
                         $upload->Process('../../data/tour/pictures/');
-                        if ($upload->processed)
-                        {
-                            $resim = $view->slug.'_'.$rand.'.'.'jpg';
+                        if ($upload->processed) {
+                            $resim = $view->slug . '_' . $rand . '.' . 'jpg';
                             $name = $view->name;
                             $slug = $view->slug;
 
@@ -1993,47 +1988,47 @@ if ($do == 'tour'){
                                 created_at = now(), 
                                 created_user = '$userID', 
                                 status = '$status'");
-                            if(!$insert){
-                                $dizi["hata"] = '654Bir hata meydana geldi.'.$db->debug();
+                            if (!$insert) {
+                                $dizi["hata"] = '654Bir hata meydana geldi.' . $db->debug();
                             }
                         }
                     }
                 }
-                $dizi["ok"] =  'Bilder hinzugefügt, sie werden weitergeleitet.';
+                $dizi["ok"] = 'Bilder hinzugefügt, sie werden weitergeleitet.';
             }
         }
-        if($q == 'pic-content'){
+        if ($q == 'pic-content') {
             $picID = p('id');
             $aciklama = p('content');
             $update = $db->query("UPDATE the_tour_picture SET content = '$aciklama' WHERE picture_id = '$picID'");
-            if ($update){
+            if ($update) {
                 $dizi["ok"] = 'Erläuterung aktualisiert.';
-            }else{
+            } else {
                 $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                 //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
             }
         }
-        if($q == 'pic-rank'){
+        if ($q == 'pic-rank') {
             $picID = p('id');
             $sira = p('rank');
             $update = $db->query("UPDATE the_tour_picture SET rank = '$sira' WHERE picture_id = '$picID'");
-            if ($update){
+            if ($update) {
                 $dizi["ok"] = 'Platzierung aktualisiert.';
-            }else{
+            } else {
                 $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                 //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
             }
         }
-        if($q == 'pic-delete'){
+        if ($q == 'pic-delete') {
             $picID = g('id');
             $bul = $db->get_row("SELECT * FROM the_tour_picture WHERE picture_id = '$picID'");
-            if($bul){
-                unlink('../../data/tour/pictures/'.$bul->mini_picture);
-                unlink('../../data/tour/pictures/'.$bul->big_picture);
+            if ($bul) {
+                unlink('../../data/tour/pictures/' . $bul->mini_picture);
+                unlink('../../data/tour/pictures/' . $bul->big_picture);
                 $sil = $db->query("DELETE FROM the_tour_picture  WHERE picture_id = '$picID'");
-                if ($sil){
+                if ($sil) {
                     $dizi["ok"] = 'Resim temizlendi.';
-                }else{
+                } else {
                     $dizi["hata"] = 'Bir hata meydana geldi.';
                     //$dizi['Ein Fehler ist aufgetretten;
                     ////$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
@@ -2044,43 +2039,43 @@ if ($do == 'tour'){
         echo json_encode($dizi);
     }
 }
-if ($do == 'tour-categories'){
-    if($_POST){
+if ($do == 'tour-categories') {
+    if ($_POST) {
 
-        if($q == 'add'){
+        if ($q == 'add') {
             $name = p('name');
             $slug = sef_link($name);
             $status = p('status');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
                 $insert = $db->query("INSERT INTO the_tour_category SET
                         name = '$name',
                         slug = '$slug',
                         created_at = now(), 
                         created_user = '$userID', 
                         status = '$status'");
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich hinzugefügt';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'edit'){
+        if ($q == 'edit') {
             $id = g('id');
             $view = $db->get_row("SELECT * FROM the_tour_category WHERE category_id = $id");
             $name = p('name');
             $slug = sef_link($name);
             $status = p('status');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
                 $insert = $db->query("UPDATE the_tour_category SET
                         name = '$name',
                         slug = '$slug',
@@ -2089,22 +2084,22 @@ if ($do == 'tour-categories'){
                         status = '$status'
                         WHERE category_id = '$id'");
 
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich aktualisiert.';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'delete'){
+        if ($q == 'delete') {
             $ID = p('deger');
             $bul = $db->get_row("SELECT * FROM the_tour_category WHERE category_id = '$ID'");
             $delete = $db->query("DELETE FROM the_tour_category  WHERE category_id = '$ID'");
-            if ($delete){
+            if ($delete) {
                 //unlink("../../data/hotel/".$bul->picture);
                 $dizi["ok"] = 'Die Inhalte wurden erfolgreich gelöscht.';
-            }else{
+            } else {
                 $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                 //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
             }
@@ -2114,47 +2109,47 @@ if ($do == 'tour-categories'){
         echo json_encode($dizi);
     }
 }
-if ($do == 'hotel-features-group'){
-    if($_POST){
+if ($do == 'hotel-features-group') {
+    if ($_POST) {
 
-        if($q == 'add'){
+        if ($q == 'add') {
             $name = p('name');
             $slug = sef_link($name);
-            $description= p('description');
+            $description = p('description');
             $rank = p('rank');
             $status = p('status');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
                 $insert = $db->query("INSERT INTO the_hotel_room_features_group SET
                         name = '$name',
                         slug = '$slug',
                         description = '$description',
                         rank = '$rank', 
                         created_at = now(), created_user = '$userID', status = '$status'");
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich hinzugefügt';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'edit'){
+        if ($q == 'edit') {
             $id = g('id');
             $view = $db->get_row("SELECT * FROM the_hotel_room_features_group WHERE features_gid = $id");
             $name = p('name');
             $slug = sef_link($name);
-            $description= p('description');
+            $description = p('description');
             $rank = p('rank');
             $status = p('status');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
                 $insert = $db->query("UPDATE the_hotel_room_features_group SET
                         name = '$name',
                         slug = '$slug',
@@ -2165,22 +2160,22 @@ if ($do == 'hotel-features-group'){
                         status = '$status'
                         WHERE features_gid = '$id'");
 
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich aktualisiert.';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'delete'){
+        if ($q == 'delete') {
             $ID = p('deger');
             $bul = $db->get_row("SELECT * FROM the_hotel_room_features_group WHERE features_gid = '$ID'");
             $delete = $db->query("DELETE FROM the_hotel_room_features_group  WHERE features_gid = '$ID'");
-            if ($delete){
+            if ($delete) {
                 //unlink("../../data/hotel/".$bul->picture);
                 $dizi["ok"] = 'Die Inhalte wurden erfolgreich gelöscht.';
-            }else{
+            } else {
                 $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                 //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
             }
@@ -2190,49 +2185,49 @@ if ($do == 'hotel-features-group'){
         echo json_encode($dizi);
     }
 }
-if ($do == 'hotel-features'){
-    if($_POST){
+if ($do == 'hotel-features') {
+    if ($_POST) {
 
-        if($q == 'add'){
+        if ($q == 'add') {
             $feature_group_id = p('feature_group_id');
             $name = p('name');
             $slug = sef_link($name);
-            $description= p('description');
+            $description = p('description');
             $rank = p('rank');
             $status = p('status');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
                 $insert = $db->query("INSERT INTO the_hotel_room_features SET
                         feature_group_id = '$feature_group_id',
                         name = '$name',
                         slug = '$slug',
                         rank = '$rank', 
                         created_at = now(), created_user = '$userID', status = '$status'");
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich hinzugefügt';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'edit'){
+        if ($q == 'edit') {
             $id = g('id');
             $view = $db->get_row("SELECT * FROM the_hotel_room_features WHERE features_id = $id");
             $name = p('name');
             $feature_group_id = p('feature_group_id');
             $slug = sef_link($name);
-            $description= p('description');
+            $description = p('description');
             $rank = p('rank');
             $status = p('status');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
                 $insert = $db->query("UPDATE the_hotel_room_features SET
                         feature_group_id = '$feature_group_id',
                         name = '$name',
@@ -2243,22 +2238,22 @@ if ($do == 'hotel-features'){
                         status = '$status'
                         WHERE features_id = '$id'");
 
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich aktualisiert.';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'delete'){
+        if ($q == 'delete') {
             $ID = p('deger');
             $bul = $db->get_row("SELECT * FROM the_hotel_room_features WHERE features_id = '$ID'");
             $delete = $db->query("DELETE FROM the_hotel_room_features  WHERE features_id = '$ID'");
-            if ($delete){
+            if ($delete) {
                 //unlink("../../data/hotel/".$bul->picture);
                 $dizi["ok"] = 'Die Inhalte wurden erfolgreich gelöscht.';
-            }else{
+            } else {
                 $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                 //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
             }
@@ -2268,43 +2263,43 @@ if ($do == 'hotel-features'){
         echo json_encode($dizi);
     }
 }
-if ($do == 'hotel-categories'){
-    if($_POST){
+if ($do == 'hotel-categories') {
+    if ($_POST) {
 
-        if($q == 'add'){
+        if ($q == 'add') {
             $name = p('name');
             $slug = sef_link($name);
             $status = p('status');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
                 $insert = $db->query("INSERT INTO the_hotel_category SET
                         name = '$name',
                         slug = '$slug',
                         created_at = now(), 
                         created_user = '$userID', 
                         status = '$status'");
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich hinzugefügt';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'edit'){
+        if ($q == 'edit') {
             $id = g('id');
             $view = $db->get_row("SELECT * FROM the_hotel_category WHERE category_id = $id");
             $name = p('name');
             $slug = sef_link($name);
             $status = p('status');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
                 $insert = $db->query("UPDATE the_hotel_category SET
                         name = '$name',
                         slug = '$slug',
@@ -2313,22 +2308,22 @@ if ($do == 'hotel-categories'){
                         status = '$status'
                         WHERE category_id = '$id'");
 
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich aktualisiert.';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'delete'){
+        if ($q == 'delete') {
             $ID = p('deger');
             $bul = $db->get_row("SELECT * FROM the_hotel_category WHERE category_id = '$ID'");
             $delete = $db->query("DELETE FROM the_hotel_category  WHERE category_id = '$ID'");
-            if ($delete){
+            if ($delete) {
                 //unlink("../../data/hotel/".$bul->picture);
                 $dizi["ok"] = 'Die Inhalte wurden erfolgreich gelöscht.';
-            }else{
+            } else {
                 $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                 //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
             }
@@ -2338,43 +2333,43 @@ if ($do == 'hotel-categories'){
         echo json_encode($dizi);
     }
 }
-if ($do == 'hotel-accommodations'){
-    if($_POST){
+if ($do == 'hotel-accommodations') {
+    if ($_POST) {
 
-        if($q == 'add'){
+        if ($q == 'add') {
             $name = p('name');
             $slug = sef_link($name);
             $status = p('status');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
                 $insert = $db->query("INSERT INTO the_hotel_accommodation SET
                         name = '$name',
                         slug = '$slug',
                         created_at = now(), 
                         created_user = '$userID', 
                         status = '$status'");
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich hinzugefügt';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'edit'){
+        if ($q == 'edit') {
             $id = g('id');
             $view = $db->get_row("SELECT * FROM the_hotel_accommodation WHERE accommodation_id = $id");
             $name = p('name');
             $slug = sef_link($name);
             $status = p('status');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
                 $insert = $db->query("UPDATE the_hotel_accommodation SET
                         name = '$name',
                         slug = '$slug',
@@ -2383,22 +2378,22 @@ if ($do == 'hotel-accommodations'){
                         status = '$status'
                         WHERE accommodation_id = '$id'");
 
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich aktualisiert.';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'delete'){
+        if ($q == 'delete') {
             $ID = p('deger');
             $bul = $db->get_row("SELECT * FROM the_hotel_accommodation WHERE accommodation_id = '$ID'");
             $delete = $db->query("DELETE FROM the_hotel_accommodation  WHERE accommodation_id = '$ID'");
-            if ($delete){
+            if ($delete) {
                 //unlink("../../data/hotel/".$bul->picture);
                 $dizi["ok"] = 'Die Inhalte wurden erfolgreich gelöscht.';
-            }else{
+            } else {
                 $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                 //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
             }
@@ -2408,43 +2403,43 @@ if ($do == 'hotel-accommodations'){
         echo json_encode($dizi);
     }
 }
-if ($do == 'hotel-themes'){
-    if($_POST){
+if ($do == 'hotel-themes') {
+    if ($_POST) {
 
-        if($q == 'add'){
+        if ($q == 'add') {
             $name = p('name');
             $slug = sef_link($name);
             $status = p('status');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
                 $insert = $db->query("INSERT INTO the_hotel_theme SET
                         name = '$name',
                         slug = '$slug',
                         created_at = now(), 
                         created_user = '$userID', 
                         status = '$status'");
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich hinzugefügt';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'edit'){
+        if ($q == 'edit') {
             $id = g('id');
             $view = $db->get_row("SELECT * FROM the_hotel_theme WHERE theme_id = $id");
             $name = p('name');
             $slug = sef_link($name);
             $status = p('status');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
                 $insert = $db->query("UPDATE the_hotel_theme SET
                         name = '$name',
                         slug = '$slug',
@@ -2453,22 +2448,22 @@ if ($do == 'hotel-themes'){
                         status = '$status'
                         WHERE theme_id = '$id'");
 
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich aktualisiert.';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'delete'){
+        if ($q == 'delete') {
             $ID = p('deger');
             $bul = $db->get_row("SELECT * FROM the_hotel_theme WHERE theme_id = '$ID'");
             $delete = $db->query("DELETE FROM the_hotel_theme  WHERE theme_id = '$ID'");
-            if ($delete){
+            if ($delete) {
                 //unlink("../../data/hotel/".$bul->picture);
                 $dizi["ok"] = 'Die Inhalte wurden erfolgreich gelöscht.';
-            }else{
+            } else {
                 $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                 //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
             }
@@ -2478,41 +2473,41 @@ if ($do == 'hotel-themes'){
         echo json_encode($dizi);
     }
 }
-if ($do == 'hotel-types'){
-    if($_POST){
+if ($do == 'hotel-types') {
+    if ($_POST) {
 
-        if($q == 'add'){
+        if ($q == 'add') {
             $name = p('name');
             $slug = sef_link($name);
             $status = p('status');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
                 $insert = $db->query("INSERT INTO the_hotel_type SET
                         name = '$name',
                         slug = '$slug',
                         created_at = now(), created_user = '$userID', status = '$status'");
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich hinzugefügt';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'edit'){
+        if ($q == 'edit') {
             $id = g('id');
             $view = $db->get_row("SELECT * FROM the_hotel_type WHERE type_id = $id");
             $name = p('name');
             $slug = sef_link($name);
             $status = p('status');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
                 $insert = $db->query("UPDATE the_hotel_type SET
                         name = '$name',
                         slug = '$slug',
@@ -2521,22 +2516,22 @@ if ($do == 'hotel-types'){
                         status = '$status'
                         WHERE type_id = '$id'");
 
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich aktualisiert.';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'delete'){
+        if ($q == 'delete') {
             $ID = p('deger');
             $bul = $db->get_row("SELECT * FROM the_hotel_type WHERE type_id = '$ID'");
             $delete = $db->query("DELETE FROM the_hotel_type  WHERE type_id = '$ID'");
-            if ($delete){
+            if ($delete) {
                 //unlink("../../data/hotel/".$bul->picture);
                 $dizi["ok"] = 'Die Inhalte wurden erfolgreich gelöscht.';
-            }else{
+            } else {
                 $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                 //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
             }
@@ -2546,9 +2541,9 @@ if ($do == 'hotel-types'){
         echo json_encode($dizi);
     }
 }
-if ($do == 'hotel-room'){
-    if($_POST){
-        if($q == 'add'){
+if ($do == 'hotel-room') {
+    if ($_POST) {
+        if ($q == 'add') {
             $name = p('name');
             $slug = sef_link($name);
             $content = p('content');
@@ -2560,25 +2555,25 @@ if ($do == 'hotel-room'){
             $status = p('status');
             $stars = p('stars');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
 
-                if(!empty($_FILES["picture"]["name"])){
+                if (!empty($_FILES["picture"]["name"])) {
                     $upload = new Upload($_FILES["picture"]);
-                    if ($upload->uploaded){
+                    if ($upload->uploaded) {
                         $rand = uniqid(true);
                         $upload->file_new_name_body = $rand;
-                        if ($upload->image_src_x > 900 || $upload->image_src_x < 900 || $upload->image_src_y > 600 || $upload->image_src_y < 600){
+                        if ($upload->image_src_x > 900 || $upload->image_src_x < 900 || $upload->image_src_y > 600 || $upload->image_src_y < 600) {
                             $upload->image_resize = true;
                             $upload->image_y = 600;
                             $upload->image_x = 900;
                         }
                         $upload->allowed = array('image/*');
                         $upload->Process("../../data/hotel/room/");
-                        if ($upload->processed){
-                            $picture = $rand.'.'.$upload->image_src_type;
+                        if ($upload->processed) {
+                            $picture = $rand . '.' . $upload->image_src_type;
                         }
                     }
                 }
@@ -2595,15 +2590,15 @@ if ($do == 'hotel-room'){
                             beds_number = '$beds_number',
                             created_at = now(), created_user = '$userID', status = '$status'");
 
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich hinzugefügt';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'edit'){
+        if ($q == 'edit') {
             $room_id = g('id');
             $view = $db->get_row("SELECT * FROM the_hotel_room WHERE room_id = '$room_id'");
 
@@ -2618,17 +2613,17 @@ if ($do == 'hotel-room'){
             $status = p('status');
             $stars = p('stars');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
 
-                if(!empty($_FILES["picture"]["name"])){
+                if (!empty($_FILES["picture"]["name"])) {
                     $upload = new Upload($_FILES["picture"]);
-                    if ($upload->uploaded){
+                    if ($upload->uploaded) {
                         $rand = uniqid(true);
-                        $upload->file_new_name_body = $slug.'_'.$rand;
-                        if ($upload->image_src_x > 900 || $upload->image_src_x < 900 || $upload->image_src_y > 600 || $upload->image_src_y < 600){
+                        $upload->file_new_name_body = $slug . '_' . $rand;
+                        if ($upload->image_src_x > 900 || $upload->image_src_x < 900 || $upload->image_src_y > 600 || $upload->image_src_y < 600) {
                             $upload->image_resize = true;
                             $upload->image_y = 600;
                             $upload->image_x = 900;
@@ -2636,12 +2631,12 @@ if ($do == 'hotel-room'){
                         $upload->image_convert = jpg;
                         $upload->allowed = array('image/*');
                         $upload->Process("../../data/hotel/room/");
-                        if ($upload->processed){
-                            $picture = $slug.'_'.$rand.'.jpg';
-                            unlink("../../data/hotel/room/".$view->picture);
+                        if ($upload->processed) {
+                            $picture = $slug . '_' . $rand . '.jpg';
+                            unlink("../../data/hotel/room/" . $view->picture);
                         }
                     }
-                }else{
+                } else {
                     $picture = $view->picture;
                 }
 
@@ -2660,54 +2655,54 @@ if ($do == 'hotel-room'){
                             status = '$status' 
                             WHERE room_id = '$room_id'");
 
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich aktualisiert.';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'delete'){
+        if ($q == 'delete') {
             $ID = p('deger');
             $bul = $db->get_row("SELECT * FROM the_hotel_room WHERE room_id = '$ID'");
             $delete = $db->query("DELETE FROM the_hotel_room  WHERE room_id = '$ID'");
 
-            if ($delete){
-                unlink("../../data/hotel/room/".$bul->picture);
+            if ($delete) {
+                unlink("../../data/hotel/room/" . $bul->picture);
                 $dizi["ok"] = 'Die Inhalte wurden erfolgreich gelöscht.';
-            }else{
+            } else {
                 $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                 //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
             }
         }
-        if($q == 'features-add'){
+        if ($q == 'features-add') {
 
             $room_id = g('id');
             $view = $db->get_row("SELECT * FROM the_hotel_room WHERE room_id = '$room_id'");
             $name = p('name');
             $ozellik_liste = $_POST['features'];
 
-            if(!$room_id AND !$name){
+            if (!$room_id and !$name) {
                 $dizi['hata'] = 'Lütfen önce bir oda belirleyiniz.';
-            }else{
+            } else {
 
                 foreach ($ozellik_liste as $ozellik_id => $deger) {
-                    if ($deger){
+                    if ($deger) {
                         $info = $db->query("INSERT INTO the_hotel_room_features_relationship SET
                                 hotel_id = '$view->hotel_id',
                                 room_id = '$room_id',
                                 features_id = '$ozellik_id'");
-                        if($info){
+                        if ($info) {
                             $dizi["ok"] = 'Erfolgreich aktualisiert.';
-                        }else{
-                            $dizi["hata"] = 'Bir hata meydana geldi.111'.$db->debug();
+                        } else {
+                            $dizi["hata"] = 'Bir hata meydana geldi.111' . $db->debug();
                         }
-                    }else{
+                    } else {
                         $info = $db->query("DELETE FROM the_hotel_room_features_relationship WHERE room_id = '$room_id' AND features_id = '$ozellik_id'");
-                        if($info){
+                        if ($info) {
                             $dizi["ok"] = 'Erfolgreich aktualisiert.';
-                        }else{
+                        } else {
                             $dizi["ok"] = 'Erfolgreich aktualisiert.';
                         }
                     }
@@ -2719,43 +2714,43 @@ if ($do == 'hotel-room'){
         echo json_encode($dizi);
     }
 }
-if ($do == 'province'){
-    if($_POST){
+if ($do == 'province') {
+    if ($_POST) {
 
-        if($q == 'add'){
+        if ($q == 'add') {
             $name = p('name');
             $slug = sef_link($name);
             $status = p('status');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
                 $insert = $db->query("INSERT INTO il SET
                         il_adi = '$name',
                         slug = '$slug',
                         created_at = now(), 
                         created_user = '$userID', 
                         status = '$status'");
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich hinzugefügt';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'edit'){
+        if ($q == 'edit') {
             $id = g('id');
             $view = $db->get_row("SELECT * FROM il WHERE id = $id");
             $name = p('name');
             $slug = sef_link($name);
             $status = p('status');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
                 $insert = $db->query("UPDATE il SET
                         il_adi = '$name',
                         slug = '$slug',
@@ -2764,21 +2759,21 @@ if ($do == 'province'){
                         status = '$status'
                         WHERE id = '$id'");
 
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich aktualisiert.';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'delete'){
+        if ($q == 'delete') {
             $ID = p('deger');
             $bul = $db->get_row("SELECT * FROM il WHERE id = '$ID'");
             $delete = $db->query("DELETE FROM il  WHERE id = '$ID'");
-            if ($delete){
+            if ($delete) {
                 $dizi["ok"] = 'Die Inhalte wurden erfolgreich gelöscht.';
-            }else{
+            } else {
                 $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                 //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
             }
@@ -2787,19 +2782,19 @@ if ($do == 'province'){
         echo json_encode($dizi);
     }
 }
-if ($do == 'state'){
-    if($_POST){
+if ($do == 'state') {
+    if ($_POST) {
 
-        if($q == 'add'){
+        if ($q == 'add') {
             $il_id = p('il_id');
             $name = p('name');
             $slug = sef_link($name);
             $status = p('status');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
                 $insert = $db->query("INSERT INTO ilce SET
                             il_id = '$il_id',
                             ilce_adi = '$name',
@@ -2807,15 +2802,15 @@ if ($do == 'state'){
                             created_at = now(), 
                             created_user = '$userID', 
                             status = '$status'");
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich hinzugefügt';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'edit'){
+        if ($q == 'edit') {
             $il_id = p('il_id');
             $id = g('id');
             $view = $db->get_row("SELECT * FROM ilce WHERE id = $id");
@@ -2823,9 +2818,9 @@ if ($do == 'state'){
             $slug = sef_link($name);
             $status = p('status');
 
-            if(!$name || !$il_id){
+            if (!$name || !$il_id) {
                 $dizi['hata'] = 'Lütfen bir başlık ve il seçiniz.';
-            }else{
+            } else {
                 $insert = $db->query("UPDATE ilce SET
                             il_id = '$il_id',
                             ilce_adi = '$name',
@@ -2835,21 +2830,21 @@ if ($do == 'state'){
                             status = '$status'
                             WHERE id = '$id'");
 
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich aktualisiert.';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'delete'){
+        if ($q == 'delete') {
             $ID = p('deger');
             $bul = $db->get_row("SELECT * FROM ilce WHERE id = '$ID'");
             $delete = $db->query("DELETE FROM ilce  WHERE id = '$ID'");
-            if ($delete){
+            if ($delete) {
                 $dizi["ok"] = 'Die Inhalte wurden erfolgreich gelöscht.';
-            }else{
+            } else {
                 $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                 //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
             }
@@ -2858,18 +2853,18 @@ if ($do == 'state'){
         echo json_encode($dizi);
     }
 }
-if ($do == 'district'){
-    if($_POST){
-        if($q == 'add'){
+if ($do == 'district') {
+    if ($_POST) {
+        if ($q == 'add') {
             $il_id = p('il_id');
             $ilce_id = p('ilce_id');
             $name = p('name');
             $slug = sef_link($name);
             $status = p('status');
 
-            if(!$name || !$il_id || !$ilce_id){
+            if (!$name || !$il_id || !$ilce_id) {
                 $dizi['hata'] = 'Lütfen bir başlık, il ve ilçe seçiniz.';
-            }else{
+            } else {
                 $insert = $db->query("INSERT INTO semt SET
                                 il_id = '$il_id',
                                 ilce_id = '$ilce_id',
@@ -2878,15 +2873,15 @@ if ($do == 'district'){
                                 created_at = now(), 
                                 created_user = '$userID', 
                                 status = '$status'");
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich hinzugefügt';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'edit'){
+        if ($q == 'edit') {
             $il_id = p('il_id');
             $ilce_id = p('ilce_id');
             $id = g('id');
@@ -2895,9 +2890,9 @@ if ($do == 'district'){
             $slug = sef_link($name);
             $status = p('status');
 
-            if(!$name || !$il_id || !$ilce_id){
+            if (!$name || !$il_id || !$ilce_id) {
                 $dizi['hata'] = 'Lütfen bir başlık, il ve ilçe seçiniz.';
-            }else{
+            } else {
                 $insert = $db->query("UPDATE semt SET
                                 il_id = '$il_id',
                                 ilce_id = '$ilce_id',
@@ -2908,21 +2903,21 @@ if ($do == 'district'){
                                 status = '$status'
                                 WHERE id = '$id'");
 
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich aktualisiert.';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'delete'){
+        if ($q == 'delete') {
             $ID = p('deger');
             $bul = $db->get_row("SELECT * FROM semt WHERE id = '$ID'");
             $delete = $db->query("DELETE FROM semt  WHERE id = '$ID'");
-            if ($delete){
+            if ($delete) {
                 $dizi["ok"] = 'Die Inhalte wurden erfolgreich gelöscht.';
-            }else{
+            } else {
                 $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                 //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
             }
@@ -2930,9 +2925,9 @@ if ($do == 'district'){
         echo json_encode($dizi);
     }
 }
-if ($do == 'neighborhood'){
-    if($_POST){
-        if($q == 'add'){
+if ($do == 'neighborhood') {
+    if ($_POST) {
+        if ($q == 'add') {
             $il_id = p('il_id');
             $ilce_id = p('ilce_id');
             $semt_id = p('semt_id');
@@ -2940,9 +2935,9 @@ if ($do == 'neighborhood'){
             $slug = sef_link($name);
             $status = p('status');
 
-            if(!$name || !$il_id || !$ilce_id){
+            if (!$name || !$il_id || !$ilce_id) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel, Ort, Landkreis, Gegend';
-            }else{
+            } else {
                 $insert = $db->query("INSERT INTO mahalle SET
                                 il_id = '$il_id',
                                 ilce_id = '$ilce_id',
@@ -2952,15 +2947,15 @@ if ($do == 'neighborhood'){
                                 created_at = now(), 
                                 created_user = '$userID', 
                                 status = '$status'");
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich hinzugefügt';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'edit'){
+        if ($q == 'edit') {
             $il_id = p('il_id');
             $ilce_id = p('ilce_id');
             $semt_id = p('semt_id');
@@ -2970,9 +2965,9 @@ if ($do == 'neighborhood'){
             $slug = sef_link($name);
             $status = p('status');
 
-            if(!$name || !$il_id || !$ilce_id || !$semt_id){
+            if (!$name || !$il_id || !$ilce_id || !$semt_id) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel, Ort, Landkreis, Gegend';
-            }else{
+            } else {
                 $insert = $db->query("UPDATE mahalle SET
                                 il_id = '$il_id',
                                 ilce_id = '$ilce_id',
@@ -2984,21 +2979,21 @@ if ($do == 'neighborhood'){
                                 status = '$status'
                                 WHERE id = '$id'");
 
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich aktualisiert.';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'delete'){
+        if ($q == 'delete') {
             $ID = p('deger');
             $bul = $db->get_row("SELECT * FROM mahalle WHERE id = '$ID'");
             $delete = $db->query("DELETE FROM mahalle  WHERE id = '$ID'");
-            if ($delete){
+            if ($delete) {
                 $dizi["ok"] = 'Die Inhalte wurden erfolgreich gelöscht.';
-            }else{
+            } else {
                 $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                 //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
             }
@@ -3006,33 +3001,33 @@ if ($do == 'neighborhood'){
         echo json_encode($dizi);
     }
 }
-if ($do == 'page'){
-    if($_POST){
-        if($q == 'add'){
+if ($do == 'page') {
+    if ($_POST) {
+        if ($q == 'add') {
             $name = p('name');
             $slug = sef_link($name);
             $content = p('content');
             $status = p('status');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
 
-                if(!empty($_FILES["picture"]["name"])){
+                if (!empty($_FILES["picture"]["name"])) {
                     $upload = new Upload($_FILES["picture"]);
-                    if ($upload->uploaded){
+                    if ($upload->uploaded) {
                         $rand = uniqid(true);
                         $upload->file_new_name_body = $rand;
-                        if ($upload->image_src_x > 900 || $upload->image_src_x < 900 || $upload->image_src_y > 600 || $upload->image_src_y < 600){
+                        if ($upload->image_src_x > 900 || $upload->image_src_x < 900 || $upload->image_src_y > 600 || $upload->image_src_y < 600) {
                             $upload->image_resize = true;
                             $upload->image_y = 600;
                             $upload->image_x = 900;
                         }
                         $upload->allowed = array('image/*');
                         $upload->Process("../../data/page/");
-                        if ($upload->processed){
-                            $picture = $rand.'.'.$upload->image_src_type;
+                        if ($upload->processed) {
+                            $picture = $rand . '.' . $upload->image_src_type;
                         }
                     }
                 }
@@ -3044,15 +3039,15 @@ if ($do == 'page'){
                             content = '$content', 
                             created_at = now(), created_user = '$userID', status = '$status'");
 
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich hinzugefügt';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'edit'){
+        if ($q == 'edit') {
             $page_id = g('id');
             $view = $db->get_row("SELECT * FROM the_page WHERE page_id = $page_id");
             $name = p('name');
@@ -3061,17 +3056,17 @@ if ($do == 'page'){
             $status = p('status');
             $stars = p('stars');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
 
-                if(!empty($_FILES["picture"]["name"])){
+                if (!empty($_FILES["picture"]["name"])) {
                     $upload = new Upload($_FILES["picture"]);
-                    if ($upload->uploaded){
+                    if ($upload->uploaded) {
                         $rand = uniqid(true);
-                        $upload->file_new_name_body = $slug.'_'.$rand;
-                        if ($upload->image_src_x > 900 || $upload->image_src_x < 900 || $upload->image_src_y > 600 || $upload->image_src_y < 600){
+                        $upload->file_new_name_body = $slug . '_' . $rand;
+                        if ($upload->image_src_x > 900 || $upload->image_src_x < 900 || $upload->image_src_y > 600 || $upload->image_src_y < 600) {
                             $upload->image_resize = true;
                             $upload->image_y = 600;
                             $upload->image_x = 900;
@@ -3079,12 +3074,12 @@ if ($do == 'page'){
                         $upload->image_convert = jpg;
                         $upload->allowed = array('image/*');
                         $upload->Process("../../data/page/");
-                        if ($upload->processed){
-                            $picture = $slug.'_'.$rand.'.jpg';
-                            unlink("../../data/page/".$view->picture);
+                        if ($upload->processed) {
+                            $picture = $slug . '_' . $rand . '.jpg';
+                            unlink("../../data/page/" . $view->picture);
                         }
                     }
-                }else{
+                } else {
                     $picture = $view->picture;
                 }
 
@@ -3098,22 +3093,22 @@ if ($do == 'page'){
                             status = '$status' 
                             WHERE page_id = '$page_id'");
 
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich aktualisiert.';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'delete'){
+        if ($q == 'delete') {
             $ID = p('deger');
             $bul = $db->get_row("SELECT * FROM the_page WHERE page_id = '$ID'");
             $delete = $db->query("DELETE FROM the_page  WHERE page_id = '$ID'");
-            if ($delete){
-                unlink("../../data/page/".$bul->picture);
+            if ($delete) {
+                unlink("../../data/page/" . $bul->picture);
                 $dizi["ok"] = 'Die Inhalte wurden erfolgreich gelöscht.';
-            }else{
+            } else {
                 $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                 //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
             }
@@ -3121,34 +3116,34 @@ if ($do == 'page'){
         echo json_encode($dizi);
     }
 }
-if ($do == 'blog'){
-    if($_POST){
-        if($q == 'add'){
+if ($do == 'blog') {
+    if ($_POST) {
+        if ($q == 'add') {
             $name = p('name');
             $slug = sef_link($name);
             $content = p('content');
             $blog_category_id = p('blog_category_id');
             $status = p('status');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
 
-                if(!empty($_FILES["picture"]["name"])){
+                if (!empty($_FILES["picture"]["name"])) {
                     $upload = new Upload($_FILES["picture"]);
-                    if ($upload->uploaded){
+                    if ($upload->uploaded) {
                         $rand = uniqid(true);
                         $upload->file_new_name_body = $rand;
-                        if ($upload->image_src_x > 900 || $upload->image_src_x < 900 || $upload->image_src_y > 600 || $upload->image_src_y < 600){
+                        if ($upload->image_src_x > 900 || $upload->image_src_x < 900 || $upload->image_src_y > 600 || $upload->image_src_y < 600) {
                             $upload->image_resize = true;
                             $upload->image_y = 600;
                             $upload->image_x = 900;
                         }
                         $upload->allowed = array('image/*');
                         $upload->Process("../../data/blog/");
-                        if ($upload->processed){
-                            $picture = $rand.'.'.$upload->image_src_type;
+                        if ($upload->processed) {
+                            $picture = $rand . '.' . $upload->image_src_type;
                         }
                     }
                 }
@@ -3161,15 +3156,15 @@ if ($do == 'blog'){
                                 content = '$content', 
                                 created_at = now(), created_user = '$userID', status = '$status'");
 
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich hinzugefügt';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'edit'){
+        if ($q == 'edit') {
             $blog_id = g('id');
             $view = $db->get_row("SELECT * FROM the_blog WHERE blog_id = $blog_id");
             $name = p('name');
@@ -3179,17 +3174,17 @@ if ($do == 'blog'){
             $status = p('status');
             $stars = p('stars');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
 
-                if(!empty($_FILES["picture"]["name"])){
+                if (!empty($_FILES["picture"]["name"])) {
                     $upload = new Upload($_FILES["picture"]);
-                    if ($upload->uploaded){
+                    if ($upload->uploaded) {
                         $rand = uniqid(true);
-                        $upload->file_new_name_body = $slug.'_'.$rand;
-                        if ($upload->image_src_x > 900 || $upload->image_src_x < 900 || $upload->image_src_y > 600 || $upload->image_src_y < 600){
+                        $upload->file_new_name_body = $slug . '_' . $rand;
+                        if ($upload->image_src_x > 900 || $upload->image_src_x < 900 || $upload->image_src_y > 600 || $upload->image_src_y < 600) {
                             $upload->image_resize = true;
                             $upload->image_y = 600;
                             $upload->image_x = 900;
@@ -3197,12 +3192,12 @@ if ($do == 'blog'){
                         $upload->image_convert = jpg;
                         $upload->allowed = array('image/*');
                         $upload->Process("../../data/blog/");
-                        if ($upload->processed){
-                            $picture = $slug.'_'.$rand.'.jpg';
-                            unlink("../../data/blog/".$view->picture);
+                        if ($upload->processed) {
+                            $picture = $slug . '_' . $rand . '.jpg';
+                            unlink("../../data/blog/" . $view->picture);
                         }
                     }
-                }else{
+                } else {
                     $picture = $view->picture;
                 }
 
@@ -3217,22 +3212,22 @@ if ($do == 'blog'){
                                 status = '$status' 
                                 WHERE blog_id = '$blog_id'");
 
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich aktualisiert.';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'delete'){
+        if ($q == 'delete') {
             $ID = p('deger');
             $bul = $db->get_row("SELECT * FROM the_blog WHERE blog_id = '$ID'");
             $delete = $db->query("DELETE FROM the_blog  WHERE blog_id = '$ID'");
-            if ($delete){
-                unlink("../../data/blog/".$bul->picture);
+            if ($delete) {
+                unlink("../../data/blog/" . $bul->picture);
                 $dizi["ok"] = 'Die Inhalte wurden erfolgreich gelöscht.';
-            }else{
+            } else {
                 $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                 //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
             }
@@ -3240,42 +3235,42 @@ if ($do == 'blog'){
         echo json_encode($dizi);
     }
 }
-if ($do == 'blog-categories'){
-    if($_POST){
-        if($q == 'add'){
+if ($do == 'blog-categories') {
+    if ($_POST) {
+        if ($q == 'add') {
             $name = p('name');
             $slug = sef_link($name);
             $status = p('status');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
                 $insert = $db->query("INSERT INTO the_blog_category SET
                             name = '$name',
                             slug = '$slug',
                             created_at = now(), 
                             created_user = '$userID', 
                             status = '$status'");
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich hinzugefügt';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'edit'){
+        if ($q == 'edit') {
             $id = g('id');
             $view = $db->get_row("SELECT * FROM the_blog_category WHERE category_id = $id");
             $name = p('name');
             $slug = sef_link($name);
             $status = p('status');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
                 $insert = $db->query("UPDATE the_blog_category SET
                             name = '$name',
                             slug = '$slug',
@@ -3284,22 +3279,22 @@ if ($do == 'blog-categories'){
                             status = '$status'
                             WHERE category_id = '$id'");
 
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich aktualisiert.';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'delete'){
+        if ($q == 'delete') {
             $ID = p('deger');
             $bul = $db->get_row("SELECT * FROM the_blog_category WHERE category_id = '$ID'");
             $delete = $db->query("DELETE FROM the_blog_category  WHERE category_id = '$ID'");
-            if ($delete){
+            if ($delete) {
                 //unlink("../../data/hotel/".$bul->picture);
                 $dizi["ok"] = 'Die Inhalte wurden erfolgreich gelöscht.';
-            }else{
+            } else {
                 $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                 //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
             }
@@ -3307,13 +3302,13 @@ if ($do == 'blog-categories'){
         echo json_encode($dizi);
     }
 }
-if ($do == 'il-ilce'){
-    if($_GET){
-        if($q == 'secim'){
+if ($do == 'il-ilce') {
+    if ($_GET) {
+        if ($q == 'secim') {
             if (isset($_GET['il'])) {
 
-                $il = (int)$_GET['il'];
-                $secili = (int)$_GET['ilce'];
+                $il = (int) $_GET['il'];
+                $secili = (int) $_GET['ilce'];
                 if ($il > 0) {
                     $dk = $db->get_results("SELECT `id`,`ilce_adi` FROM `ilce` WHERE `il_id`='$il' ORDER BY `id` ASC");
 
@@ -3322,7 +3317,7 @@ if ($do == 'il-ilce'){
                     } else {
                         $list = '{"0":"Seçiniz",';
                     }
-                    foreach ($dk as $ilr ) {
+                    foreach ($dk as $ilr) {
                         $list .= '"' . $ilr->id . '":"' . $ilr->ilce_adi . '",';
                     }
                     $list = substr($list, 0, -1);
@@ -3330,8 +3325,8 @@ if ($do == 'il-ilce'){
                     echo $list;
                 }
             } else if (isset($_GET['ilce'])) {
-                $ilce = (int)$_GET['ilce'];
-                $secili = (int)$_GET['semt'];
+                $ilce = (int) $_GET['ilce'];
+                $secili = (int) $_GET['semt'];
                 if ($ilce > 0) {
                     $dk = $db->get_results("SELECT `id`,`semt_adi` FROM `semt` WHERE `ilce_id`='$ilce' ORDER BY `id` ASC");
                     if ($secili > 0) {
@@ -3339,7 +3334,7 @@ if ($do == 'il-ilce'){
                     } else {
                         $list = '{"0":"Seçiniz",';
                     }
-                    foreach ($dk as $ilr ) {
+                    foreach ($dk as $ilr) {
                         $list .= '"' . $ilr->id . '":"' . $ilr->semt_adi . '",';
                     }
                     $list = substr($list, 0, -1);
@@ -3347,8 +3342,8 @@ if ($do == 'il-ilce'){
                     echo $list;
                 }
             } else if (isset($_GET['semt'])) {
-                $semt = (int)$_GET['semt'];
-                $secili = (int)$_GET['mahalle'];
+                $semt = (int) $_GET['semt'];
+                $secili = (int) $_GET['mahalle'];
 
                 if ($semt > 0) {
                     $dk = $db->get_results("SELECT `id`,`mahalle_adi` FROM `mahalle` WHERE `semt_id`='$semt' ORDER BY `ordernum` DESC, id ASC");
@@ -3359,7 +3354,7 @@ if ($do == 'il-ilce'){
                         $list = '{"0":"Seçiniz",';
                     }
 
-                    foreach ($dk as $ilr ) {
+                    foreach ($dk as $ilr) {
                         $list .= '"' . $ilr->id . '":"' . $ilr->mahalle_adi . '",';
                     }
                     $list = substr($list, 0, -1);
@@ -3373,15 +3368,15 @@ if ($do == 'il-ilce'){
 if ($do == 'site-logo') {
     if ($_POST) {
         $site_images = $db->get_row("SELECT * FROM site_settings WHERE id = 1");
-        unlink("../../data/genel/".$site_images->site_logo);
+        unlink("../../data/genel/" . $site_images->site_logo);
         $update = $db->query("UPDATE site_settings SET
                   site_logo = '',
                   updatet_at = now()
                   WHERE id = 1");
 
-        if ($update){
+        if ($update) {
             $dizi["ok"] = 'Die Inhalte wurden erfolgreich gelöscht.';
-        }else{
+        } else {
             $dizi["hata"] = 'Ein Fehler ist aufgetretten';
             //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
         }
@@ -3391,15 +3386,15 @@ if ($do == 'site-logo') {
 if ($do == 'site-footer-logo') {
     if ($_POST) {
         $site_images = $db->get_row("SELECT * FROM site_settings WHERE id = 1");
-        unlink("../../data/genel/".$site_images->site_footer_logo);
+        unlink("../../data/genel/" . $site_images->site_footer_logo);
         $update = $db->query("UPDATE site_settings SET
                   site_footer_logo = '',
                   updatet_at = now()
                   WHERE id = 1");
 
-        if ($update){
+        if ($update) {
             $dizi["ok"] = 'Die Inhalte wurden erfolgreich gelöscht.';
-        }else{
+        } else {
             $dizi["hata"] = 'Ein Fehler ist aufgetretten';
             //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
         }
@@ -3409,111 +3404,111 @@ if ($do == 'site-footer-logo') {
 if ($do == 'site-watermark-logo') {
     if ($_POST) {
         $site_images = $db->get_row("SELECT * FROM site_settings WHERE id = 1");
-        unlink("../../data/genel/".$site_images->site_watermatik_logo);
+        unlink("../../data/genel/" . $site_images->site_watermatik_logo);
         $update = $db->query("UPDATE site_settings SET
                       site_watermatik_logo = '',
                       updatet_at = now()
                       WHERE id = 1");
 
-        if ($update){
+        if ($update) {
             $dizi["ok"] = 'Die Inhalte wurden erfolgreich gelöscht.';
-        }else{
+        } else {
             $dizi["hata"] = 'Ein Fehler ist aufgetretten';
             //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
         }
         echo json_encode($dizi);
     }
 }
-if ($do == 'watermarkStatus'){
-    if($_POST){
+if ($do == 'watermarkStatus') {
+    if ($_POST) {
         $status = p('status');
 
         $site_images = $db->get_row("SELECT * FROM site_settings WHERE id = 1");
-        if($site_images->site_watermatik_logo){
+        if ($site_images->site_watermatik_logo) {
             $update = $db->query("UPDATE site_settings SET site_watermatik_active = '$status', updatet_at = now() WHERE id = 1");
-            if ($update){
+            if ($update) {
                 $dizi["ok"] = 'Erfolgreich aktualisiert.';
-            }else{
+            } else {
                 $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                 //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
             }
-        }else{
+        } else {
             $dizi["hata"] = 'Yüklü bir watermark görseli bulunmadığı için aktif hale getirilmedi.';
         }
     }
     echo json_encode($dizi);
 }
-if ($do == 'site-images'){
-    if($_POST){
+if ($do == 'site-images') {
+    if ($_POST) {
 
         $site_images = $db->get_row("SELECT * FROM site_settings WHERE id = 1");
 
-        if(!empty($_FILES["site_logo"]["name"])){
+        if (!empty($_FILES["site_logo"]["name"])) {
             $upload = new Upload($_FILES["site_logo"]);
-            if ($upload->uploaded){
+            if ($upload->uploaded) {
                 $rand = uniqid(true);
                 $upload->file_new_name_body = $rand;
-                if ($upload->image_src_x > $site_images->site_logo_width || $upload->image_src_x < $site_images->site_logo_width || $upload->image_src_y > $site_images->site_logo_height || $upload->image_src_y < $site_images->site_logo_height ){
+                if ($upload->image_src_x > $site_images->site_logo_width || $upload->image_src_x < $site_images->site_logo_width || $upload->image_src_y > $site_images->site_logo_height || $upload->image_src_y < $site_images->site_logo_height) {
                     $upload->image_resize = true;
                     $upload->image_y = $site_images->site_logo_height;
                     $upload->image_x = $site_images->site_logo_width;
                 }
                 $upload->allowed = array('image/*'); // sadece resimler kabul edilsin
                 $upload->Process("../../data/genel/");
-                if ($upload->processed){
-                    $site_logo = $rand.'.'.$upload->image_src_type;
-                    if($site_images->site_logo){
-                        unlink("../../data/genel/".$site_images->site_logo);
+                if ($upload->processed) {
+                    $site_logo = $rand . '.' . $upload->image_src_type;
+                    if ($site_images->site_logo) {
+                        unlink("../../data/genel/" . $site_images->site_logo);
                     }
                 }
             }
-        }else{
+        } else {
             $site_logo = $site_images->site_logo;
         }
 
-        if(!empty($_FILES["site_footer_logo"]["name"])){
+        if (!empty($_FILES["site_footer_logo"]["name"])) {
             $upload = new Upload($_FILES["site_footer_logo"]);
-            if ($upload->uploaded){
+            if ($upload->uploaded) {
                 $rand = uniqid(true);
                 $upload->file_new_name_body = $rand;
-                if ($upload->image_src_x > $site_images->site_flogo_width || $upload->image_src_x < $site_images->site_flogo_width || $upload->image_src_y > $site_images->site_flogo_height || $upload->image_src_y < $site_images->site_flogo_height ){
+                if ($upload->image_src_x > $site_images->site_flogo_width || $upload->image_src_x < $site_images->site_flogo_width || $upload->image_src_y > $site_images->site_flogo_height || $upload->image_src_y < $site_images->site_flogo_height) {
                     $upload->image_resize = true;
                     $upload->image_y = $site_images->site_flogo_height;
                     $upload->image_x = $site_images->site_flogo_width;
                 }
                 $upload->allowed = array('image/*'); // sadece resimler kabul edilsin
                 $upload->Process("../../data/genel/");
-                if ($upload->processed){
-                    $site_footer_logo = $rand.'.'.$upload->image_src_type;
-                    if($site_images->site_footer_logo){
-                        unlink("../../data/genel/".$site_images->site_footer_logo);
+                if ($upload->processed) {
+                    $site_footer_logo = $rand . '.' . $upload->image_src_type;
+                    if ($site_images->site_footer_logo) {
+                        unlink("../../data/genel/" . $site_images->site_footer_logo);
                     }
                 }
             }
-        }else{
+        } else {
             $site_footer_logo = $site_images->site_footer_logo;
         }
 
-        if(!empty($_FILES["site_watermatik_logo"]["name"])){
+        if (!empty($_FILES["site_watermatik_logo"]["name"])) {
             $upload = new Upload($_FILES["site_watermatik_logo"]);
-            if ($upload->uploaded){
+            if ($upload->uploaded) {
                 $rand = uniqid(true);
                 $upload->file_new_name_body = $rand;
-                if ($upload->image_src_x > 600 || $upload->image_src_x < 600 || $upload->image_src_y > 600 || $upload->image_src_y < 600 ){
+                if ($upload->image_src_x > 600 || $upload->image_src_x < 600 || $upload->image_src_y > 600 || $upload->image_src_y < 600) {
                     $upload->image_resize = true;
                     $upload->image_y = 600;
                     $upload->image_x = 600;
                 }
                 $upload->allowed = array('image/*'); // sadece resimler kabul edilsin
                 $upload->Process("../../data/genel/");
-                if ($upload->processed){
-                    $site_watermatik_logo = $rand.'.'.$upload->image_src_type;
-                    if($site_images->site_watermatik_logo){
-                        unlink("../../data/genel/".$site_images->site_watermatik_logo);
+                if ($upload->processed) {
+                    $site_watermatik_logo = $rand . '.' . $upload->image_src_type;
+                    if ($site_images->site_watermatik_logo) {
+                        unlink("../../data/genel/" . $site_images->site_watermatik_logo);
                     }
                 }
             }
-        }else{
+        } else {
             $site_watermatik_logo = $site_images->site_watermatik_logo;
         }
 
@@ -3524,9 +3519,9 @@ if ($do == 'site-images'){
                   updatet_at = now()
                   WHERE id = 1");
 
-        if ($update){
+        if ($update) {
             $dizi["ok"] = 'Erfolgreich aktualisiert.';
-        }else{
+        } else {
             $dizi["hata"] = 'Ein Fehler ist aufgetretten';
             //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
         }
@@ -3534,18 +3529,18 @@ if ($do == 'site-images'){
         echo json_encode($dizi);
     }
 }
-if ($do == 'social'){
-    if($_POST){
-        if($q == 'add'){
+if ($do == 'social') {
+    if ($_POST) {
+        if ($q == 'add') {
             $name = p('name');
             $icon = p('icon');
             $link = p('link');
             $rank = p('rank');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
 
                 $insert = $db->query("INSERT INTO social_networks SET
                         name = '$name',
@@ -3553,25 +3548,25 @@ if ($do == 'social'){
                         icon = '$icon',
                         rank = '$rank', created_at = now()");
 
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich hinzugefügt';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'edit'){
+        if ($q == 'edit') {
             $rowID = g('id');
             $name = p('name');
             $icon = p('icon');
             $link = p('link');
             $rank = p('rank');
 
-            if(!$name){
+            if (!$name) {
                 $dizi['hata'] = 'Bitte wählen Sie einen Titel.';
                 //$dizi['hata'] = 'Lütfen bir başlık belirtiniz.';
-            }else{
+            } else {
 
                 $insert = $db->query("UPDATE social_networks SET
                         name = '$name',
@@ -3579,42 +3574,42 @@ if ($do == 'social'){
                         icon = '$icon',
                         rank = '$rank', updated_at = now() WHERE id = '$rowID'");
 
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Erfolgreich aktualisiert.';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'delete'){
+        if ($q == 'delete') {
             $rowID = p('id');
 
-            if(!$rowID){
+            if (!$rowID) {
                 $dizi['hata'] = 'Lütfen bir kayıt seçiniz.';
-            }else{
+            } else {
                 $insert = $db->query("DELETE FROM social_networks WHERE id = '$rowID'");
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Die Inhalte wurden erfolgreich gelöscht.';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
             }
         }
-        if($q == 'rankEdit'){
+        if ($q == 'rankEdit') {
             $rowID = p('id');
             $rank = p('rank');
 
-            if(!$rowID){
+            if (!$rowID) {
                 $dizi['hata'] = 'Lütfen bir kayıt seçiniz.';
-            }else{
+            } else {
 
                 $insert = $db->query("UPDATE social_networks SET rank = '$rank', updated_at = now() WHERE id = '$rowID'");
 
-                if($insert){
+                if ($insert) {
                     $dizi["ok"] = 'Platzierung aktualisiert';
-                }else{
+                } else {
                     $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                     //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
                 }
@@ -3623,8 +3618,8 @@ if ($do == 'social'){
         echo json_encode($dizi);
     }
 }
-if ($do == 'google_settings'){
-    if($_POST){
+if ($do == 'google_settings') {
+    if ($_POST) {
 
         $site_google_meta = p('site_google_meta');
         $site_google_analytics = p('site_google_analytics');
@@ -3641,17 +3636,17 @@ if ($do == 'google_settings'){
                   updatet_at = now()
                   WHERE id = 1");
 
-        if ($update){
+        if ($update) {
             $dizi["ok"] = 'Erfolgreich aktualisiert.';
-        }else{
+        } else {
             $dizi["hata"] = 'Ein Fehler ist aufgetretten';
             //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
         }
         echo json_encode($dizi);
     }
 }
-if ($do == 'smtp'){
-    if($_POST){
+if ($do == 'smtp') {
+    if ($_POST) {
 
         $smtp_title = p('smtp_title');
         $smtp_server = p('smtp_server');
@@ -3669,9 +3664,9 @@ if ($do == 'smtp'){
                   smtp_password = '$smtp_password'
                   WHERE id = 1");
 
-        if ($update){
+        if ($update) {
             $dizi["ok"] = 'Erfolgreich aktualisiert.';
-        }else{
+        } else {
             $dizi["hata"] = 'Ein Fehler ist aufgetretten';
             //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
         }
@@ -3681,12 +3676,12 @@ if ($do == 'smtp'){
 if ($do == 'admin') {
     if ($_POST) {
 
-        if($q == 'admin_login'){
+        if ($q == 'admin_login') {
             $user_email = p('email');
             $user_password = p('password');
             $password = sha1(md5($user_password));
             $user = $db->get_row("SELECT * FROM users WHERE email = '$user_email' AND password = '$password'");
-            if($user){
+            if ($user) {
                 echo "ok";
                 session_start();
                 $uyeBilgileri = array(
@@ -3695,7 +3690,7 @@ if ($do == 'admin') {
                 $_SESSION["the_admin"] = $uyeBilgileri;
 
                 $update = $db->query("UPDATE users SET lastlogin_at = now() WHERE id = '$user->id' ");
-            }else{
+            } else {
                 echo "Die eingegebenen Daten sind falsch. Überprüfen Sie diese bitte und versuchen Sie es erneut.";
             }
         }
@@ -3705,27 +3700,27 @@ if ($do == 'admin') {
 if ($do == 'rezervasyon') {
     if ($_POST) {
 
-        if($q == 'one'){
+        if ($q == 'one') {
 
             $rez_type = p('rez_type');
             $tour_id = p('tour_id');
             $tour_dates = p('tour_dates');
             $person_size = p('person_size');
             $child_size = p('child_size');
-            if(!$rez_type || !$tour_id || !$tour_dates ||  !$person_size){
+            if (!$rez_type || !$tour_id || !$tour_dates || !$person_size) {
                 $dizi["hata"] = 'Bei der Erstellung einer Reservierung ist ein Fehler aufgetretten. Bitte aktualisieren Sie die Seite und versuchen Sie es erneut.';
-            }else{
+            } else {
                 //$_SESSION["sepet"]["rez_type"] = $rez_type;
 
                 $paketID = p('tour_id');
                 $paketbul = $db->get_row("SELECT * FROM the_tour WHERE tour_id = '$paketID'");
                 $_SESSION["sepet"]["rezervasyonNumarasi"] = $sesSiparisNo;
                 $sifrele = sha1(base64_encode(md5(base64_encode($simdikiZaman))));
-                if(empty($sesSiparisNo)){
-                    $siparisNo =  date('Y').date('m').substr($sifrele, 1, 7);
+                if (empty($sesSiparisNo)) {
+                    $siparisNo = date('Y') . date('m') . substr($sifrele, 1, 7);
                     $_SESSION["sepet"]["rezervasyonNumarasi"] = $siparisNo;
-                }else{
-                    $siparisNo =  $sesSiparisNo;
+                } else {
+                    $siparisNo = $sesSiparisNo;
                 }
 
                 $arrayName = array(
@@ -3779,11 +3774,11 @@ if ($do == 'rezervasyon') {
             */
         }
 
-        if($q == 'two'){
+        if ($q == 'two') {
             $dizi["ok"] = 'devam';
         }
 
-        if($q == 'end'){
+        if ($q == 'end') {
             $havalimani = p('havalimani');
             $owner_gender = p('owner_gender');
             $owner_email = p('owner_email');
@@ -3795,23 +3790,27 @@ if ($do == 'rezervasyon') {
             $owner_telephone = p('owner_telephone');
             $owner_postal_code = p('owner_postal_code');
 
-            if(!$owner_firstname || !$owner_lastname || !$owner_email || !$owner_telephone){
+            if (!$owner_firstname || !$owner_lastname || !$owner_email || !$owner_telephone) {
                 $dizi["hata"] = 'Bitte füllen Sie die Pflichtfelder aus';
                 //$dizi["hata"] = 'Lütfen zorunlu alanları doldurunuz.';
-            }else{
+            } else {
 
-                if(!isset($_SESSION['uye'])){
+                if (!isset($_SESSION['uye'])) {
                     // üyelik yok ise
                     @$uyelikDurum = '';
                     @$misafir = '';
-                    if($uyelik == 'on'){$misafir = 1;}else{$misafir = 0;}
+                    if ($uyelik == 'on') {
+                        $misafir = 1;
+                    } else {
+                        $misafir = 0;
+                    }
                     // böyle bir mail adresi veritabanında var mı ?
                     $emailKontrol = $db->get_var("SELECT COUNT(*) FROM users WHERE email = '$owner_email'");
-                    if($emailKontrol){
+                    if ($emailKontrol) {
                         $uyelikDurum = 1;
                         $emailKontrol = $db->get_row("SELECT * FROM users WHERE email = '$owner_email'");
                         $lastUser = $emailKontrol->id;
-                    }else{
+                    } else {
                         $uyelikDurum = 0;
                         $uyelik = $db->query("INSERT INTO users SET
                                 gender = '$owner_gender',
@@ -3861,7 +3860,7 @@ if ($do == 'rezervasyon') {
                             created_at = now(),
                             status = 0");
 
-                    if($siparisInsert){
+                    if ($siparisInsert) {
                         $gender = $_POST['gender'];
                         $firstname = $_POST['firstname'];
                         $lastname = $_POST['lastname'];
@@ -3871,7 +3870,7 @@ if ($do == 'rezervasyon') {
                         $mounth = $_POST['mounth'];
                         $year = $_POST['year'];
 
-                        for($i=0; $i<count($gender); $i++){
+                        for ($i = 0; $i < count($gender); $i++) {
                             $rezuserinsert .= $db->query("INSERT INTO reservations_users SET
                                     rezervation_number = '$rezervasyonNo',
                                     gender = '$gender[$i]',
@@ -3882,17 +3881,17 @@ if ($do == 'rezervasyon') {
                                     passport_date = '$passport_date[$i]'");
                         }
 
-                        if($rezuserinsert){
+                        if ($rezuserinsert) {
                             $dizi["ok"] = 'başarılı.';
-                        }else{
+                        } else {
                             $dizi["hata"] = '3hata222.';
                         }
-                    }else{
+                    } else {
                         $dizi["hata"] = '3ha111ta.';
                     }
 
 
-                }else{
+                } else {
                     $lastUser = $_SESSION['uye']['hzu_userid'];
                     $rezervasyonNo = $_SESSION["sepet"]["rezervasyonNumarasi"];
                     $sepetim__urunler = isset($_SESSION['sepet']['rezervasyon']) ? $_SESSION['sepet']['rezervasyon'] : array();
@@ -3925,7 +3924,7 @@ if ($do == 'rezervasyon') {
                         created_at = now(),
                         status = 0");
 
-                    if($siparisInsert){
+                    if ($siparisInsert) {
                         $gender = $_POST['gender'];
                         $firstname = $_POST['firstname'];
                         $lastname = $_POST['lastname'];
@@ -3935,7 +3934,7 @@ if ($do == 'rezervasyon') {
                         $mounth = $_POST['mounth'];
                         $year = $_POST['year'];
 
-                        for($i=0; $i<count($gender); $i++){
+                        for ($i = 0; $i < count($gender); $i++) {
                             $rezuserinsert .= $db->query("INSERT INTO reservations_users SET
                                     rezervation_number = '$rezervasyonNo',
                                     gender = '$gender[$i]',
@@ -3946,12 +3945,12 @@ if ($do == 'rezervasyon') {
                                     passport_date = '$passport_date[$i]'");
                         }
 
-                        if($rezuserinsert){
+                        if ($rezuserinsert) {
                             $dizi["ok"] = 'başarılı.';
-                        }else{
+                        } else {
                             $dizi["hata"] = '3323hata.';
                         }
-                    }else{
+                    } else {
                         $dizi["hata"] = '3122hata.';
                     }
                 }
@@ -3988,14 +3987,14 @@ if ($do == 'rezervasyon') {
             }
             */
         }
-        if($q == 'delete'){
+        if ($q == 'delete') {
             $ID = p('deger');
             $bul = $db->get_row("SELECT * FROM reservations WHERE id = '$ID'");
             $delete = $db->query("DELETE FROM reservations_users  WHERE rezervation_number = '$bul->rezervation_number'");
             $delete = $db->query("DELETE FROM reservations  WHERE id = '$ID'");
-            if ($delete){
+            if ($delete) {
                 $dizi["ok"] = 'Die Inhalte wurden erfolgreich gelöscht.';
-            }else{
+            } else {
                 $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                 //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
             }
@@ -4006,7 +4005,7 @@ if ($do == 'rezervasyon') {
 if ($do == 'otel-rezervasyon') {
     if ($_POST) {
 
-        if($q == 'one'){
+        if ($q == 'one') {
 
             $rez_type = p('rez_type');
             $hotel_id = p('hotel_id');
@@ -4014,24 +4013,24 @@ if ($do == 'otel-rezervasyon') {
             $dates = p('dates');
             $person_size = p('person_size');
             $child_size = p('child_size');
-            if(!$rez_type || !$person_size){
+            if (!$rez_type || !$person_size) {
                 $dizi["hata"] = 'Bei der Erstellung einer Reservierung ist ein Fehler aufgetretten. Bitte aktualisieren Sie die Seite und versuchen Sie es erneut.';
-            }else if(!$dates){
+            } else if (!$dates) {
                 $dizi["hata"] = 'Bitte geben Sie das Datum an.';
-            }else{
+            } else {
                 //$_SESSION["sepet"]["rez_type"] = $rez_type;
-                $datesExplode = explode(" > ",$dates);
+                $datesExplode = explode(" > ", $dates);
                 $start_date = $datesExplode[0];
                 $end_date = $datesExplode[1];
                 $paketID = p('hotel_id');
                 $paketbul = $db->get_row("SELECT * FROM the_hotel WHERE hotel_id = '$paketID'");
                 $_SESSION["sepet"]["rezervasyonNumarasi"] = $sesSiparisNo;
                 $sifrele = sha1(base64_encode(md5(base64_encode($simdikiZaman))));
-                if(empty($sesSiparisNo)){
-                    $siparisNo =  date('Y').date('m').substr($sifrele, 1, 7);
+                if (empty($sesSiparisNo)) {
+                    $siparisNo = date('Y') . date('m') . substr($sifrele, 1, 7);
                     $_SESSION["sepet"]["rezervasyonNumarasi"] = $siparisNo;
-                }else{
-                    $siparisNo =  $sesSiparisNo;
+                } else {
+                    $siparisNo = $sesSiparisNo;
                 }
 
                 $arrayName = array(
@@ -4088,11 +4087,11 @@ if ($do == 'otel-rezervasyon') {
             */
         }
 
-        if($q == 'two'){
+        if ($q == 'two') {
             $dizi["ok"] = 'devam';
         }
 
-        if($q == 'end'){
+        if ($q == 'end') {
             $havalimani = p('havalimani');
             $owner_gender = p('owner_gender');
             $owner_email = p('owner_email');
@@ -4105,30 +4104,34 @@ if ($do == 'otel-rezervasyon') {
             $owner_postal_code = p('owner_postal_code');
             $sozlesme = p('sozlesme');
 
-            if(!$owner_firstname || !$owner_lastname || !$owner_email || !$owner_telephone){
+            if (!$owner_firstname || !$owner_lastname || !$owner_email || !$owner_telephone) {
                 $dizi["hata"] = 'Bitte füllen Sie die Pflichtfelder aus';
                 //$dizi["hata"] = 'Lütfen zorunlu alanları doldurunuz.';
-            }else if(!$sozlesme){
+            } else if (!$sozlesme) {
                 $dizi["hata"] = 'Sie können die Buchung nicht fortsetzen, ohne die Vereinbarung zu akzeptieren. Bitte lesen Sie die Vereinbarung und bestätigen Sie.';
-            }else{
+            } else {
 
                 // üyelik yok ise
-                if(!isset($_SESSION['uye'])){
+                if (!isset($_SESSION['uye'])) {
                     @$uyelikDurum = '';
                     @$misafir = '';
-                    if($uyelik == 'on'){$misafir = 1;}else{$misafir = 0;}
+                    if ($uyelik == 'on') {
+                        $misafir = 1;
+                    } else {
+                        $misafir = 0;
+                    }
 
                     // böyle bir mail adresi veritabanında var mı ?
                     $emailKontrol = $db->get_var("SELECT COUNT(*) FROM users WHERE email = '$owner_email'");
-                    if($emailKontrol){
+                    if ($emailKontrol) {
                         $uyelikDurum = 1;
                         $emailKontrol = $db->get_row("SELECT * FROM users WHERE email = '$owner_email'");
                         $lastUserID = $emailKontrol->id;
                         $dizi["hata"] = 'Diese E-Mail-Adresse wird bereits verwendet, bitte melden Sie sich an.';
-                    }else{
+                    } else {
                         $ownerPassword = sifreUret(10);
                         $ownerPasswordDB = sha1(md5($ownerPassword));
-                        $ownerName = $owner_firstname.' '.$owner_lastname;
+                        $ownerName = $owner_firstname . ' ' . $owner_lastname;
                         $uyelikDurum = 0;
                         $active_code = sha1(md5($simdikiZaman));
                         $uyelik = $db->query("INSERT INTO users SET
@@ -4153,10 +4156,10 @@ if ($do == 'otel-rezervasyon') {
                         $lastUserID = $db->insert_id;
 
                     }
-                        $emailKontrol = $db->get_row("SELECT * FROM users WHERE id = '$lastUserID'");
+                    $emailKontrol = $db->get_row("SELECT * FROM users WHERE id = '$lastUserID'");
 
-                        $ownerEmail = $owner_email;
-                        $mail_icerik = '<!DOCTYPE html>
+                    $ownerEmail = $owner_email;
+                    $mail_icerik = '<!DOCTYPE html>
                                         <html lang="de">
                                     <head>
                                         <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
@@ -5090,9 +5093,9 @@ if ($do == 'otel-rezervasyon') {
 
                                                                                                                                     Ihre
                                                                                                                                     E-Mail
-                                                                                                                                    Adresse: <strong>'.$ownerEmail.'</strong> <br>
+                                                                                                                                    Adresse: <strong>' . $ownerEmail . '</strong> <br>
 
-                                                                                                                                    Passwort: <strong> '.$ownerPassword.' </strong> <br>
+                                                                                                                                    Passwort: <strong> ' . $ownerPassword . ' </strong> <br>
 
                                                                                                                                 </h2>
                                                                                                                         </th>
@@ -5163,7 +5166,7 @@ if ($do == 'otel-rezervasyon') {
                                                                                                                                                             align="left"
                                                                                                                                                             bgcolor="#4E78F1"
                                                                                                                                                             valign="top">
-                                                                                                                                                            <a href="https://www.sungate24.com/act/'.$ownerEmail.'/'.$active_code.'" style="border: 0 solid #4e78f1; border-radius: 6px; color: #FFFFFF; display: inline-block; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: bold; line-height: 1.3; margin: 0; padding: 13px 0; text-align: center; text-decoration: none; width: 100%" target="_blank"><p class="text-center"
+                                                                                                                                                            <a href="https://www.sungate24.com/act/' . $ownerEmail . '/' . $active_code . '" style="border: 0 solid #4e78f1; border-radius: 6px; color: #FFFFFF; display: inline-block; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: bold; line-height: 1.3; margin: 0; padding: 13px 0; text-align: center; text-decoration: none; width: 100%" target="_blank"><p class="text-center"
                                                                                                                                                                     style="color: white; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 300; letter-spacing: 1px; line-height: 1.3; margin: 0; padding: 0; text-align: center"
                                                                                                                                                                     align="center">
                                                                                                                                                                     Aktivieren!
@@ -5404,7 +5407,7 @@ if ($do == 'otel-rezervasyon') {
                                                                 align="center">
                                                                 <span class="text-divider" style="margin-left: 10px; margin-right: 10px">
                                                                     ©
-                                                                    '.date('Y').'
+                                                                    ' . date('Y') . '
                                                                     <a href="https://www.sungate24.com/?ref=active_email"
                                                                         style="color: #4E78F1; font-family: Helvetica, Arial, sans-serif; font-weight: normal; line-height: 1.3; margin: 0; padding: 0; text-align: left; text-decoration: none"
                                                                         target="_blank">
@@ -5436,13 +5439,13 @@ if ($do == 'otel-rezervasyon') {
                                     </body>
                                     
                                     </html>';
-                                    $subject = 'Mitgliedschaftsaktivierung';
-                        
-                    
+                    $subject = 'Mitgliedschaftsaktivierung';
 
-                        $rezervasyonNo = $_SESSION["sepet"]["rezervasyonNumarasi"];
-                        $sepetim__urunler = isset($_SESSION['sepet']['rezervasyon']) ? $_SESSION['sepet']['rezervasyon'] : array();
-                        foreach ($sepetim__urunler as $sepetim__urun) {
+
+
+                    $rezervasyonNo = $_SESSION["sepet"]["rezervasyonNumarasi"];
+                    $sepetim__urunler = isset($_SESSION['sepet']['rezervasyon']) ? $_SESSION['sepet']['rezervasyon'] : array();
+                    foreach ($sepetim__urunler as $sepetim__urun) {
                         $hotel_id = $sepetim__urun['hotel_id'];
                         $room_id = $sepetim__urun['room_id'];
                         $dates = $sepetim__urun['dates'];
@@ -5463,7 +5466,7 @@ if ($do == 'otel-rezervasyon') {
 
                     $tarih1 = strtotime($start_date);
                     $tarih2 = strtotime($end_date);
-                    $gunSayisi =  ($tarih2 - $tarih1) / (60*60*24);
+                    $gunSayisi = ($tarih2 - $tarih1) / (60 * 60 * 24);
                     $fiyat = $fiyat * $gunSayisi;
 
                     $siparisInsert = $db->query("INSERT INTO reservations SET
@@ -5483,7 +5486,7 @@ if ($do == 'otel-rezervasyon') {
                             created_at = now(),
                             status = 0");
 
-                    if($siparisInsert){
+                    if ($siparisInsert) {
                         $gender = $_POST['gender'];
                         $firstname = $_POST['firstname'];
                         $lastname = $_POST['lastname'];
@@ -5493,7 +5496,7 @@ if ($do == 'otel-rezervasyon') {
                         $mounth = $_POST['mounth'];
                         $year = $_POST['year'];
 
-                        for($i=0; $i<count($gender); $i++){
+                        for ($i = 0; $i < count($gender); $i++) {
                             $rezuserinsert .= $db->query("INSERT INTO reservations_users SET
                                         rezervation_number = '$rezervasyonNo',
                                         gender = '$gender[$i]',
@@ -5505,9 +5508,9 @@ if ($do == 'otel-rezervasyon') {
                         }
 
                         $otelAdi = $paketbul->name;
-                        $rezervasyonLink = 'https://www.sungate24.com/resretail/'.$rezervasyonNo;
-                        if($rezuserinsert){
-                            sendMail($ownerEmail,$ownerName, $mail_icerik, $subject);
+                        $rezervasyonLink = 'https://www.sungate24.com/resretail/' . $rezervasyonNo;
+                        if ($rezuserinsert) {
+                            sendMail($ownerEmail, $ownerName, $mail_icerik, $subject);
                             try {
                                 date_default_timezone_set('Europe/Istanbul');
                                 //Server settings
@@ -6443,10 +6446,10 @@ if ($do == 'otel-rezervasyon') {
                                                                                                                                     align="left">Reservierung abgeschlossen.</h1>
                                                                                                                                 <h2 class="welcome-subcontent"
                                                                                                                                     style="color: #6F7881; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 300; line-height: 22px; margin: 0; padding: 0; text-align: center; width: 100%; word-wrap: normal"
-                                                                                                                                    align="left">Ihre Reservierung im '.$otelAdi.' Hotel wurde zwischen dem '.$start_date.' - '.$end_date.' Datum erfolgreich reserviert.  </h2>
+                                                                                                                                    align="left">Ihre Reservierung im ' . $otelAdi . ' Hotel wurde zwischen dem ' . $start_date . ' - ' . $end_date . ' Datum erfolgreich reserviert.  </h2>
                                                                                                                                 <h2 class="welcome-subcontent"
                                                                                                                                     style="color: #6F7881; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 300; line-height: 22px; margin: 10px 0 0 0; padding: 0; text-align: center; width: 100%; word-wrap: normal"
-                                                                                                                                    align="left"> Um Ihre Reservierungsdetails anzuzeigen, klicken Sie <a style="color: #333; font-weight:500;" href="'.$rezervasyonLink.'">hier</a> oder verwenden Sie die Schaltfläche unten.</h2>
+                                                                                                                                    align="left"> Um Ihre Reservierungsdetails anzuzeigen, klicken Sie <a style="color: #333; font-weight:500;" href="' . $rezervasyonLink . '">hier</a> oder verwenden Sie die Schaltfläche unten.</h2>
                                                                                                                             </th>
                                                                                                                             <th class="expander"
                                                                                                                                 style="color: #1C232B; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 1.3; margin: 0; padding: 0; text-align: left; visibility: hidden; width: 0"
@@ -6515,7 +6518,7 @@ if ($do == 'otel-rezervasyon') {
                                                                                                                                                                 align="left"
                                                                                                                                                                 bgcolor="#4E78F1"
                                                                                                                                                                 valign="top">
-                                                                                                                                                                <a href="'.$rezervasyonLink.'" style="border: 0 solid #4e78f1; border-radius: 6px; color: #FFFFFF; display: inline-block; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: bold; line-height: 1.3; margin: 0; padding: 13px 0; text-align: center; text-decoration: none; width: 100%" target="_blank"><p class="text-center"
+                                                                                                                                                                <a href="' . $rezervasyonLink . '" style="border: 0 solid #4e78f1; border-radius: 6px; color: #FFFFFF; display: inline-block; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: bold; line-height: 1.3; margin: 0; padding: 13px 0; text-align: center; text-decoration: none; width: 100%" target="_blank"><p class="text-center"
                                                                                                                                                                         style="color: white; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 300; letter-spacing: 1px; line-height: 1.3; margin: 0; padding: 0; text-align: center"
                                                                                                                                                                         align="center">
                                                                                                                                                                         Reservierung anzeigen
@@ -6756,7 +6759,7 @@ if ($do == 'otel-rezervasyon') {
                                                                     align="center">
                                                                     <span class="text-divider" style="margin-left: 10px; margin-right: 10px">
                                                                         ©
-                                                                        '.date('Y').'
+                                                                        ' . date('Y') . '
                                                                         <a href="https://www.sungate24.com/?ref=active_email"
                                                                             style="color: #4E78F1; font-family: Helvetica, Arial, sans-serif; font-weight: normal; line-height: 1.3; margin: 0; padding: 0; text-align: left; text-decoration: none"
                                                                             target="_blank">
@@ -6789,29 +6792,28 @@ if ($do == 'otel-rezervasyon') {
                                         
                                         </html>
                                     ');
-                                if(!$mail->Send()) {
+                                if (!$mail->Send()) {
                                     $dizi["hata"] = 'Wenn ein Fehler aufgetreten ist, wenden Sie sich an unseren Kundendienst, falls das Problem weiterhin besteht.';
                                     exit;
                                 } else {
                                     unset($_SESSION["sepet"]);
                                     $dizi["ok"] = 'Ihre Registrierung ist erfolgreich. Bitte überprüfen Sie Ihre E-Mail-Adresse und Ihre Junk-Mailbox.';
-                                    
+
                                     $_POST = array();
-                                    
+
                                 }
-                            }
-                            catch (Exception $e) {
+                            } catch (Exception $e) {
                                 $dizi["hata"] = 'Wenn ein Fehler aufgetreten ist, wenden Sie sich an unseren Kundendienst, falls das Problem weiterhin besteht.';
                                 exit;
                             }
-                        }else{
+                        } else {
                             $dizi["hata"] = '3h222ata.';
                         }
-                    }else{
-                        $dizi["hata"] = 'Bir hata'.$lastUser.'meydana geldi.'.$db->debug();
+                    } else {
+                        $dizi["hata"] = 'Bir hata' . $lastUser . 'meydana geldi.' . $db->debug();
                     }
 
-                }else{
+                } else {
                     $lastUser = $_SESSION['uye']['hzu_userid'];
                     $rezervasyonNo = $_SESSION["sepet"]["rezervasyonNumarasi"];
                     $sepetim__urunler = isset($_SESSION['sepet']['rezervasyon']) ? $_SESSION['sepet']['rezervasyon'] : array();
@@ -6833,7 +6835,7 @@ if ($do == 'otel-rezervasyon') {
                     }
                     $tarih1 = strtotime($start_date);
                     $tarih2 = strtotime($end_date);
-                    $gunSayisi =  ($tarih2 - $tarih1) / (60*60*24);
+                    $gunSayisi = ($tarih2 - $tarih1) / (60 * 60 * 24);
                     $fiyat = $fiyat * $gunSayisi;
 
                     $siparisInsert = $db->query("INSERT INTO reservations SET
@@ -6853,7 +6855,7 @@ if ($do == 'otel-rezervasyon') {
                             created_at = now(),
                             status = 0");
 
-                    if($siparisInsert){
+                    if ($siparisInsert) {
                         $gender = $_POST['gender'];
                         $firstname = $_POST['firstname'];
                         $lastname = $_POST['lastname'];
@@ -6863,11 +6865,11 @@ if ($do == 'otel-rezervasyon') {
                         $mounth = $_POST['mounth'];
                         $year = $_POST['year'];
 
-                        if(!$gender || !$firstname || !$lastname || !$passport_no){
+                        if (!$gender || !$firstname || !$lastname || !$passport_no) {
                             $dizi["hata"] = 'Bitte füllen Sie alle Felder aus..';
-                        }else{
-                            for($i=0; $i<count($gender); $i++){
-                                $birthday = $year[$i].'-'.$mounth[$i].'-'.$day[$i];
+                        } else {
+                            for ($i = 0; $i < count($gender); $i++) {
+                                $birthday = $year[$i] . '-' . $mounth[$i] . '-' . $day[$i];
                                 $rezuserinsert .= $db->query("INSERT INTO reservations_users SET
                                         rezervation_number = '$rezervasyonNo',
                                         gender = '$gender[$i]',
@@ -6879,15 +6881,15 @@ if ($do == 'otel-rezervasyon') {
                             }
                             $otelAdi = $paketbul->name;
 
-                            $rezervasyonLink = 'https://www.sungate24.com/resretail/'.$rezervasyonNo;
+                            $rezervasyonLink = 'https://www.sungate24.com/resretail/' . $rezervasyonNo;
 
-                            if($rezuserinsert){
+                            if ($rezuserinsert) {
                                 $dizi["hata"] = '3h2222222ata.';
-                            }else{
+                            } else {
                                 $dizi["hata"] = '3h222ata.';
                             }
                         }
-                    }else{
+                    } else {
                         $dizi["hata"] = '23hata.';
                     }
 
@@ -6926,14 +6928,14 @@ if ($do == 'otel-rezervasyon') {
             */
         }
 
-        if($q == 'delete'){
+        if ($q == 'delete') {
             $ID = p('deger');
             $bul = $db->get_row("SELECT * FROM reservations WHERE id = '$ID'");
             $delete = $db->query("DELETE FROM reservations_users  WHERE rezervation_number = '$bul->rezervation_number'");
             $delete = $db->query("DELETE FROM reservations  WHERE id = '$ID'");
-            if ($delete){
+            if ($delete) {
                 $dizi["ok"] = 'Die Inhalte wurden erfolgreich gelöscht.';
-            }else{
+            } else {
                 $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                 //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
             }
@@ -6945,7 +6947,7 @@ if ($do == 'otel-rezervasyon') {
 if ($do == 'user') {
     if ($_POST) {
 
-        if($q == 'fatura_edit'){
+        if ($q == 'fatura_edit') {
             $userID = $_SESSION['uye']['hzu_userid'];
             $fatura_unvan = p('fatura_unvan');
             $fatura_telefon = p('telefon');
@@ -6956,18 +6958,18 @@ if ($do == 'user') {
             $fatura_vergi = p('fatura_vergi');
 
             $user = $db->get_row("SELECT * FROM users WHERE id = '$userID'");
-            if($user){
+            if ($user) {
                 $update = $db->query("UPDATE users SET
 						fatura_vergi = '$fatura_vergi',
 						fatura_unvan = '$fatura_unvan',
 						fatura_telefon = '$fatura_telefon',
 						fatura_adresi = '$fatura_adres' WHERE id = '$userID'");
-                if($update){
+                if ($update) {
                     $dizi['ok'] = 'Ihre Informationen wurden erfolgreich aktualisiert.';
-                }else{
+                } else {
                     $dizi['hata'] = 'Ein Fehler ist aufgetreten und Ihre Informationen konnten nicht aktualisiert werden.';
                 }
-            }else{
+            } else {
                 $dizi['hata'] = 'Ein Fehler ist aufgetreten und Ihre Informationen konnten nicht aktualisiert werden.';
             }
 
@@ -6989,7 +6991,7 @@ if ($do == 'user') {
             */
         }
 
-        if($q == 'edit'){
+        if ($q == 'edit') {
             $userID = $_SESSION['uye']['hzu_userid'];
             $firstname = p('firstname');
             $lastname = p('lastname');
@@ -7000,11 +7002,11 @@ if ($do == 'user') {
             $gender = p('gender');
 
             $user = $db->get_row("SELECT * FROM users WHERE id = '$userID'");
-            if($user){
-                if($user_sifre){
+            if ($user) {
+                if ($user_sifre) {
                     $passwordduz = $user_sifre;
                     $password = sha1(md5($user_sifre));
-                }else{
+                } else {
                     $passwordduz = $user->password_temiz;
                     $password = $user->password;
                 }
@@ -7014,7 +7016,7 @@ if ($do == 'user') {
                         gender = '$gender',
                         email = '$user_email',
                         telephone = '$user_phone' WHERE id = '$userID'");
-                if($update){
+                if ($update) {
                     $upUser = $db->get_row("SELECT * FROM users WHERE id = '$userID'");
                     $uyeBilgileri = array(
                         "hzu_userid" => $upUser->id,
@@ -7025,10 +7027,10 @@ if ($do == 'user') {
                     $_SESSION["uye"] = $uyeBilgileri;
 
                     $dizi['ok'] = 'Ihre Informationen wurden erfolgreich aktualisiert.';
-                }else{
+                } else {
                     $dizi['hata'] = 'Ein Fehler ist aufgetreten und Ihre Informationen konnten nicht aktualisiert werden.';
                 }
-            }else{
+            } else {
                 $dizi['hata'] = 'Ein Fehler ist aufgetreten und Ihre Informationen konnten nicht aktualisiert werden.';
             }
 
@@ -7050,13 +7052,13 @@ if ($do == 'user') {
             */
         }
 
-        if($q == 'login'){
+        if ($q == 'login') {
             $user_email = trim($_POST['email']);
             $user_password = trim($_POST['password']);
             $password = sha1(md5($user_password));
             $user = $db->get_row("SELECT * FROM users WHERE email = '$user_email' AND password = '$password'");
-            if($user){
-                $userAdSoyad = $user->firstname.' '.$user->lastname;
+            if ($user) {
+                $userAdSoyad = $user->firstname . ' ' . $user->lastname;
                 $uyeBilgileri = array(
                     "hzu_userid" => $user->id,
                     "hzu_name" => $userAdSoyad,
@@ -7064,12 +7066,12 @@ if ($do == 'user') {
                 );
                 $_SESSION["uye"] = $uyeBilgileri;
                 $dizi['ok'] = 'Anmeldung erfolgreich, Weiterleitung.';
-            }else{
+            } else {
                 $dizi['hata'] = 'Bitte überprüfen Sie die eingegebenen Informationen falsch und versuchen Sie es erneut.';
             }
         }
 
-        if($q == 'register'){
+        if ($q == 'register') {
             $firstname = p('firstname');
             $lastname = p('lastname');
             $user_username = sef_link($user_name);
@@ -7079,13 +7081,13 @@ if ($do == 'user') {
             $user_sozlesme = p('sozlesme');
             $user_google = p('g-recaptcha-response');
 
-            if(!$firstname || !$lastname || !$user_email || !$user_password) {
+            if (!$firstname || !$lastname || !$user_email || !$user_password) {
                 $dizi["hata"] = 'Bitte füllen Sie alle Felder aus';
-            }elseif (!preg_match("/^[_\.0-9a-zA-Z-]+@([0-9a-zA-Z][0-9a-zA-Z-]+\.)+[a-zA-Z]{2,6}$/i",$user_email)) {
+            } elseif (!preg_match("/^[_\.0-9a-zA-Z-]+@([0-9a-zA-Z][0-9a-zA-Z-]+\.)+[a-zA-Z]{2,6}$/i", $user_email)) {
                 $dizi["hata"] = 'Die E-Mail-Adresse ist falsch. Bitte geben Sie eine korrekte E-Mail-Adresse ein, da Sie sonst keine Informationen über die Site erhalten und sich nicht beim System anmelden können.';
-            }else{
+            } else {
                 $sorgu = $db->get_var("SELECT COUNT(*) FROM users WHERE email='$user_email'");
-                if ( $sorgu > 0) {
+                if ($sorgu > 0) {
                     $dizi["hata"] = 'Diese E-Mail-Adresse wird bereits von einem anderen Benutzer verwendet. Wenn Sie Ihr Passwort vergessen haben, senden Sie eine Reset-Nachricht.';
                 } else {
 
@@ -7100,10 +7102,10 @@ if ($do == 'user') {
                               ugroup = 0,
 	                          created_at = now(),
                               status = 0");
-                    if($userInsert){
+                    if ($userInsert) {
 
                         $user = $db->get_row("SELECT * FROM users WHERE email = '$user_email' AND password = '$user_password2'");
-                        $userAdSoyad = $user->firstname.' '.$user->lastname;
+                        $userAdSoyad = $user->firstname . ' ' . $user->lastname;
                         $uyeBilgileri = array(
                             "hzu_userid" => $user->id,
                             "hzu_name" => $userAdSoyad,
@@ -8115,7 +8117,7 @@ if ($do == 'user') {
                                                                                                                                                                 align="left"
                                                                                                                                                                 bgcolor="#4E78F1"
                                                                                                                                                                 valign="top">
-                                                                                                                                                                <a href="https://www.sungate24.com/act/'.$user->email.'/'.$active_code.'" style="border: 0 solid #4e78f1; border-radius: 6px; color: #FFFFFF; display: inline-block; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: bold; line-height: 1.3; margin: 0; padding: 13px 0; text-align: center; text-decoration: none; width: 100%" target="_blank"><p class="text-center"
+                                                                                                                                                                <a href="https://www.sungate24.com/act/' . $user->email . '/' . $active_code . '" style="border: 0 solid #4e78f1; border-radius: 6px; color: #FFFFFF; display: inline-block; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: bold; line-height: 1.3; margin: 0; padding: 13px 0; text-align: center; text-decoration: none; width: 100%" target="_blank"><p class="text-center"
                                                                                                                                                                         style="color: white; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 300; letter-spacing: 1px; line-height: 1.3; margin: 0; padding: 0; text-align: center"
                                                                                                                                                                         align="center">
                                                                                                                                                                         Aktivieren!
@@ -8356,7 +8358,7 @@ if ($do == 'user') {
                                                                     align="center">
                                                                     <span class="text-divider" style="margin-left: 10px; margin-right: 10px">
                                                                         ©
-                                                                        '.date('Y').'
+                                                                        ' . date('Y') . '
                                                                         <a href="https://www.sungate24.com/?ref=active_email"
                                                                             style="color: #4E78F1; font-family: Helvetica, Arial, sans-serif; font-weight: normal; line-height: 1.3; margin: 0; padding: 0; text-align: left; text-decoration: none"
                                                                             target="_blank">
@@ -8389,33 +8391,32 @@ if ($do == 'user') {
                                         
                                         </html>
                                     ');
-                            if(!$mail->Send()) {
+                            if (!$mail->Send()) {
                                 $dizi["hata"] = 'Wenn ein Fehler aufgetreten ist, wenden Sie sich an unseren Kundendienst, falls das Problem weiterhin besteht.';
                                 exit;
                             } else {
                                 $dizi["ok"] = 'Ihre Registrierung ist erfolgreich. Bitte überprüfen Sie Ihre E-Mail-Adresse und Ihre Junk-Mailbox.';
                                 $_POST = array();
                             }
-                        }
-                        catch (Exception $e) {
+                        } catch (Exception $e) {
                             $dizi["hata"] = 'Wenn ein Fehler aufgetreten ist, wenden Sie sich an unseren Kundendienst, falls das Problem weiterhin besteht.';
                             exit;
                         }
 
-                    }else{
+                    } else {
                         $dizi["hata"] = 'Wenn ein Fehler aufgetreten ist, wenden Sie sich an unseren Kundendienst, falls das Problem weiterhin besteht.';
                     }
                 }
             }
         }
 
-        if($q == 'delete'){
+        if ($q == 'delete') {
             $ID = p('deger');
             $bul = $db->get_row("SELECT * FROM users WHERE id = '$ID'");
             $delete = $db->query("DELETE FROM users  WHERE id = '$ID'");
-            if ($delete){
+            if ($delete) {
                 $dizi["ok"] = 'Die Inhalte wurden erfolgreich gelöscht.';
-            }else{
+            } else {
                 $dizi["hata"] = 'Ein Fehler ist aufgetretten';
                 //$dizi["hata"] = 'Bir hata meydana geldi.'.$db->debug();
             }

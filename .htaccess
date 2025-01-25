@@ -88,5 +88,5 @@ RewriteRule ^faturaEdit$ app/req/ajax.php?do=user&q=fatura_edit
 
 ReWriteRule ^sitemap.xml sitemap.php
 RewriteRule ^404$ 404.php [L]
-ErrorDocument 404 https://www.sungate24.com/404
+# ErrorDocument 404 https://www.sungate24.com/404
 
